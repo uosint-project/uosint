@@ -43,7 +43,7 @@
 $ git clone https://github.com/uosint-project/uosint.git
 
 # change the working directory to sherlock
-$ cd UOSINT
+$ cd uosint
 
 # install the requirements
 $ python3 -m pip install -r requirements.txt
