@@ -46,7 +46,7 @@ $ git clone https://github.com/uosint-project/uosint.git
 $ cd uosint
 
 # install the requirements
-$ python3 -m pip install -r requirements.txt
+$ python -m pip install -r requirements.txt
 ```
 
 ## Usage:
