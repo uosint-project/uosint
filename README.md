@@ -64,7 +64,13 @@ To search for only one user:
 ```
 python uosint.py -u username or --username username
 ```
-
+  
+## Screenshots
+<p align=center>
+  <br>
+  <a target="_blank"><img src="./modules/image/usernames.PNG"></a></br>
+</p>
+  
 ## License
 
 MIT © Username Open-source intelligence [ **UOSINT** ]<br/>
