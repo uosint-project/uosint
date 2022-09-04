@@ -1,4 +1,4 @@
-## List Of Supported Sites (29 Sites In Total!)
+## List Of Supported Sites (28 Sites In Total!)
 1. [Facebook](https://www.facebook.com/)
 2. [Twitter](https://twitter.com/)
 3. [Instagram](https://www.instagram.com/)
