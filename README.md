@@ -42,8 +42,9 @@
 # clone the repo
 $ git clone https://github.com/uosint-project/uosint.git
 
-# change the working directory to sherlock
+# change the working directory to uosint
 $ cd uosint
+$ chmod 777 uosint
 
 # install the requirements
 $ python -m pip install -r requirements.txt
