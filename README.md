@@ -40,7 +40,7 @@
 
 ```console
 # clone the repo
-$ git clone https://github.com/naimkowshik/UOSINT.git
+$ git clone https://github.com/naimkowshik/uosint.git
 
 # change the working directory to sherlock
 $ cd UOSINT
