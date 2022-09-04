@@ -57,8 +57,8 @@ you can type `-i` for help menu.
 | FLAGS  | DESCRIPTION                                       | ISREQUIRED | API Required | API WebSite |
 |--------|---------------------------------------------------|------------|-----|-----|
 | -e     | Sometime USER write Email in there Bio, in that case you will take that Email and use -e command.                                  | Yes        | No        | No WebSite |
-| -u   | Information will be collected from many website such as Social Media,Dating Platfrom,Music Platfrom,Porn, etc.                               | No         | No         | No WebSite |
-| -n | Sometime USER write Phone Number in there Bio, in that case you will take that phoneNumber and use -n command                      | No         | No        | No WebSite |
+| -u   | Information will be collected from many website such as Social Media,Dating Platfrom,Music Platfrom,Porn, etc.                               | Yes         | No         | No WebSite |
+| -n | Sometime USER write Phone Number in there Bio, in that case you will take that phoneNumber and use -n command                      | Yes         | No        | No WebSite |
 
 To search for only one user:
 ```
