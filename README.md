@@ -67,6 +67,7 @@ python uosint.py -u username or --username username
 ## License
 
 MIT © Username Open-source intelligence [ **UOSINT** ]<br/>
+Original Creator - [Naim Kowshik](https://github.com/naimkowshik)
 
 </p>
 
