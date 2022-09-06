@@ -64,6 +64,8 @@ To search for only one user:
 ```
 python uosint.py -u username or --username username
 ```
+## Description
+ <span> This tool will help you to find the information of **USERNAME**. Before there are many tools that just show that the **USERNAME** is used on that website but they don't show **Name**, **Phone_Numbe**r, **Profile Photo**, **Address**, **Followers**, **Following** etc. This is different from other tools. This tool will show all the **PUBLICLY** available information on the website where the **USERNAME** is used. </span>
   
 ## Screenshots
 <p align=center>
