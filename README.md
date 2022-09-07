@@ -43,8 +43,8 @@
 $ git clone https://github.com/uosint-project/uosint.git
 
 # change the working directory to uosint
-$ cd uosint
 $ chmod 777 uosint
+$ cd uosint
 
 # install the requirements
 $ python -m pip install -r requirements.txt
