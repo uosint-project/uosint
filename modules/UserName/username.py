@@ -1046,8 +1046,6 @@ def Username_input(usernames):
 
         TradingView_NAME = TradingView_Soup.find('div', class_="tv-profile__main-block--container")
 
-        TradingView_USER_REPUTATION = TradingView_Soup.find('div', class_="tv-profile__socials")
-
         if (not TradingView_NAME):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
@@ -1058,13 +1056,6 @@ def Username_input(usernames):
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Image {Y}:{RS} {TradingView_IMAGE['content']}")
-
-        if (not TradingView_IMAGE):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Reputation {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            TradingView_USER_REPUTATIONS = TradingView_Soup.find('div', class_="tv-profile__socials").find('span',
-                                                                                                           class_="tv-profile__social-item-value").get_text()
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Reputation {Y}:{RS} {TradingView_USER_REPUTATIONS}")
 
     if TradingView_Request.status_code == 404:
         print(f"\n[{B} TradingView{RS} ]")
@@ -1259,7 +1250,7 @@ def Username_input(usernames):
 
     if BANDCAMP_URL_Request.status_code == 200:
 
-        print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+        print(f"\n[{B} BANDCAMP{RS} ]")
 
         BANDCAMP_Soup = BeautifulSoup(BANDCAMP_URL_Request.text, "html.parser")
 
@@ -1280,7 +1271,7 @@ def Username_input(usernames):
 
 
     elif BANDCAMP_URL_Request.status_code == 404:
-        print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+        print(f"\n[{B} BANDCAMP{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     # [ BEZUZYTECZNA ]
@@ -1411,6 +1402,206 @@ def Username_input(usernames):
 
     elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
         print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ COMMUNITY BITWARDEN ]
+
+    COMMUNITY_BITWARDEN_URL = f"https://community.bitwarden.com/u/{usernames}/summary"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    COMMUNITY_BITWARDEN_URL_Request = requests.request("GET", COMMUNITY_BITWARDEN_URL, headers=headers)
+
+    if COMMUNITY_BITWARDEN_URL_Request.status_code == 200:
+        print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_BITWARDEN_URL}")
+
+        COMMUNITY_BITWARDEN_Soup = BeautifulSoup(COMMUNITY_BITWARDEN_URL_Request.text, "html.parser")
+
+        COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_Soup.find('div', attrs={'id': 'main-outlet'}).findAll(
+            'img')
+
+        COMMUNITY_BITWARDEN_PROFILE_NAME = COMMUNITY_BITWARDEN_Soup.find('div', attrs={'id': 'main-outlet'}).find('h2',
+                                                                                                                  attrs={
+                                                                                                                      'class': 'username'})
+
+        COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_PROFILE_PICS[0]
+
+        if (not COMMUNITY_BITWARDEN_PROFILE_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_NAME.getText()}")
+
+        if (not COMMUNITY_BITWARDEN_PROFILE_PICS):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_PICS.attrs['src']}")
+
+
+    elif COMMUNITY_BITWARDEN_URL_Request.status_code == 404:
+        print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ BOOKCROSSING ]
+
+    BOOKCROSSING_URL = f"https://www.bookcrossing.com/mybookshelf/{usernames}/"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    BOOKCROSSING_URL_Request = requests.request("GET", BOOKCROSSING_URL, headers=headers)
+
+    if BOOKCROSSING_URL_Request.status_code == 200:
+        print(f"\n[{B} BOOKCROSSING{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BOOKCROSSING_URL}")
+
+        BOOKCROSSING_Soup = BeautifulSoup(BOOKCROSSING_URL_Request.text, "html.parser")
+
+        BOOKCROSSING_NAME = BOOKCROSSING_Soup.find('div', attrs={'class': 'col small'}).find('h2')
+
+        if (not BOOKCROSSING_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BOOKCROSSING_NAME.getText()}")
+
+    elif BOOKCROSSING_URL_Request.status_code == 404:
+        print(f"\n[{B} BOOKCROSSING{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ BUY ME A COFFEE ]
+
+    BUY_ME_A_COFFEE_URL = f"https://www.buymeacoffee.com/{usernames}"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    BUY_ME_A_COFFEE_URL_Request = requests.request("GET", BUY_ME_A_COFFEE_URL, headers=headers)
+
+    if BUY_ME_A_COFFEE_URL_Request.status_code == 200:
+        print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUY_ME_A_COFFEE_URL}")
+
+        BUY_ME_A_COFFEE_Soup = BeautifulSoup(BUY_ME_A_COFFEE_URL_Request.text, "html.parser")
+
+        BUY_ME_A_COFFEE_NAME = BUY_ME_A_COFFEE_Soup.find('div', attrs={
+            'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
+        BUY_ME_A_COFFEE_DESCRIPTION = BUY_ME_A_COFFEE_Soup.find('div', attrs={
+            'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
+        BUY_ME_A_COFFEE_PROFILE_PHOTO = BUY_ME_A_COFFEE_Soup.find('div', attrs={'class': 'ctr-img-w-h mg-0-a'}).findAll(
+            'img')
+
+        BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS = BUY_ME_A_COFFEE_PROFILE_PHOTO[0]
+
+        if (not BUY_ME_A_COFFEE_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUY_ME_A_COFFEE_NAME[0].getText()}")
+
+        if (not BUY_ME_A_COFFEE_DESCRIPTION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BUY_ME_A_COFFEE_DESCRIPTION[1].getText()}")
+
+        if (not BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS.attrs['data-src']}")
+
+
+    elif BUY_ME_A_COFFEE_URL_Request.status_code == 404:
+        print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ BUZZFEED ]
+
+    BUZZFEED_URL = f"https://www.buzzfeed.com/{usernames}"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    BUZZFEED_URL_Request = requests.request("GET", BUZZFEED_URL, headers=headers)
+
+    if BUZZFEED_URL_Request.status_code == 200:
+        print(f"\n[{B} BUZZFEED{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUZZFEED_URL}")
+
+        BUZZFEED_Soup = BeautifulSoup(BUZZFEED_URL_Request.text, "html.parser")
+
+        BUZZFEED_NAME = BUZZFEED_Soup.find('div', attrs={'class': 'userNameContainer__3Ba3D0bepv'}).find('h1')
+        BUZZFEED_JOIN = BUZZFEED_Soup.find('dl', attrs={'class': 'userMetaList__3R_19D6l1X'}).find('dd')
+
+        if (not BUZZFEED_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUZZFEED_NAME.getText()}")
+
+        if (not BUZZFEED_JOIN):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BUZZFEED_JOIN.getText()}")
+
+
+    elif BUZZFEED_URL_Request.status_code == 404:
+        print(f"\n[{B} BUZZFEED{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ CNET ]
+
+    CNET_URL = f"https://www.cnet.com/profiles/{usernames}/"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    CNET_URL_Request = requests.request("GET", CNET_URL, headers=headers)
+
+    if CNET_URL_Request.status_code == 200:
+        print(f"\n[{B} CNET{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CNET_URL}")
+
+        CNET_Soup = BeautifulSoup(CNET_URL_Request.text, "html.parser")
+
+        CNET_NAME = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('h1').find('span',
+                                                                                        attrs={'itemprop': 'name'})
+        CNET_LOCATION = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('div', attrs={'class': 'col-5'}).find(
+            'span', attrs={'itemprop': 'locality'})
+        CNET_PROFILE_PHOTO = CNET_Soup.find('div', attrs={'class': 'headshot big'})
+
+        if (not CNET_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {CNET_NAME.getText()}")
+
+        if (not CNET_LOCATION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {CNET_LOCATION.getText()}")
+
+        if (not CNET_PROFILE_PHOTO):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            CNET_PHOTO = CNET_PROFILE_PHOTO.find('figure', attrs={'class': 'img'}).findAll('img')
+
+            CNETS_PHOTO = CNET_PHOTO[0]
+
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {CNETS_PHOTO.attrs['src']}")
+
+    elif CNET_URL_Request.status_code == 404:
+        print(f"\n[{B} CNET{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
