@@ -1375,6 +1375,44 @@ def Username_input(usernames):
         print(f"\n[{B} BIKEMAP{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ FORUM DANGEROUSTHINGS ]
+
+    FORUM_DANGEROUSTHINGS_URL = f"https://forum.dangerousthings.com/u/{usernames}"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    FORUM_DANGEROUSTHINGS_URL_Request = requests.request("GET", FORUM_DANGEROUSTHINGS_URL, headers=headers)
+
+    if FORUM_DANGEROUSTHINGS_URL_Request.status_code == 200:
+        print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {FORUM_DANGEROUSTHINGS_URL}")
+
+        FORUM_DANGEROUSTHINGS_Soup = BeautifulSoup(FORUM_DANGEROUSTHINGS_URL_Request.text, "html.parser")
+
+        FORUM_DANGEROUSTHINGS_NAME = FORUM_DANGEROUSTHINGS_Soup.find('div', attrs={'class': 'user-crawler'}).find('h2',
+                                                                                                                  attrs={
+                                                                                                                      'class': 'username'})
+
+        FORUM_DANGEROUSTHINGS_BIO = FORUM_DANGEROUSTHINGS_Soup.find('p')
+
+        if (not FORUM_DANGEROUSTHINGS_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FORUM_DANGEROUSTHINGS_NAME.getText()}")
+
+        if (not FORUM_DANGEROUSTHINGS_BIO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {FORUM_DANGEROUSTHINGS_BIO.getText()}")
+
+    elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
+        print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
@@ -1851,5 +1889,3 @@ def Username_input(usernames):
     elif XHAMSTER_Request.status_code == 404:
         print(f"\n[{B} X HAMSTER{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
-
-
