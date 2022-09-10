@@ -54,51 +54,6 @@ def Username_input(usernames):
         print(f"[{B} FACEBOOK{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
 
-    # [ Instagram ]
-
-    Instagram_Url = f"https://bibliogram.art/u/{usernames}"
-
-    Instagram_Request = requests.get(Instagram_Url)
-
-    if Instagram_Request.status_code == 200:
-
-        print(f"\n[{B} INSTAGRAM{RS} ]")
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {f'https://www.instagram.com/{usernames}'}")
-
-        Instagram_Soup = BeautifulSoup(Instagram_Request.text, "html.parser")
-
-        full_name_tag = Instagram_Soup.find_all(class_="full-name")
-        username_tag = Instagram_Soup.find_all(class_="username")
-        Following_Followed_posts = Instagram_Soup.find_all(class_="count")
-        structured_text_bio_tag = Instagram_Soup.find_all(class_="structured-text bio")
-        website_tag = Instagram_Soup.find_all(class_="website")
-
-        for FULL_NAME in full_name_tag:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FULL_NAME.string}")
-
-        for USERNAME in username_tag:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {USERNAME.string}")
-
-        for Following in Following_Followed_posts[0]:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Posts {Y}:{RS} {Following.string}")
-
-        for Following in Following_Followed_posts[1]:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Following {Y}:{RS}{Following.string}")
-
-        for Following in Following_Followed_posts[2]:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Followers {Y}:{RS}{Following.string}")
-
-        for USER_BIO in structured_text_bio_tag:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {USER_BIO.string}")
-
-        for USER_WEBSITE in website_tag:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {USER_WEBSITE.string}")
-
-    elif Instagram_Request.status_code == 404:
-        print(f"\n[{B} INSTAGRAM{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
-
     # [ Twitter ]
 
     Twitter_Url = f"https://nitter.net/{usernames}"
