@@ -527,12 +527,8 @@ def Username_input(usernames):
 
         if (not profile_private_info):
             if (not NOT_FOUND):
-                Location_STEAM = STEAM_Soup.find('img', class_='profile_flag').next_sibling.strip('\\t\\r\\n')
-                LOCATION_REMOVE_SPACE = Location_STEAM
-                RESULT_SPACE = LOCATION_REMOVE_SPACE.strip()
                 print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {STEAM_Url}")
                 print(f"{' ' * 5}└[{B}•{RS}] {C}User Player Name {Y}:{RS} {STEAM_name[0].getText()}")
-                print(f"{' ' * 5}└[{G}•{RS}] {C}User Player Location {Y}:{RS} {RESULT_SPACE}")
                 print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player LevelNum {Y}:{RS} {STEAM_friend_PlayerLevel[0].getText()}")
             else:
                 print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
@@ -1557,6 +1553,53 @@ def Username_input(usernames):
 
     elif CNET_URL_Request.status_code == 404:
         print(f"\n[{B} CNET{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ COROFLOT ]
+
+    COROFLOT_URL = f"https://www.coroflot.com/{usernames}/profile"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    COROFLOT_URL_Request = requests.request("GET", COROFLOT_URL, headers=headers)
+
+    if COROFLOT_URL_Request.status_code == 200:
+
+        print(f"\n[{B} COROFLOT{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {COROFLOT_URL}")
+
+        COROFLOT_Soup = BeautifulSoup(COROFLOT_URL_Request.text, "html.parser")
+
+        COROFLOT_NAME = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('h1',
+                                                                                      attrs={'class': 'name_full'})
+        COROFLOT_LOCATION = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('div',
+                                                                                          attrs={'class': 'location'})
+        COROFLOT_JOIN = COROFLOT_Soup.find('div', attrs={'class': 'member_since_block'})
+
+        if (not COROFLOT_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            SPACE_REMOVE = COROFLOT_NAME.get_text()
+            SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SPACE_REMOVE_RESULT}")
+
+        if (not COROFLOT_LOCATION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {COROFLOT_LOCATION.getText()}")
+
+        if (not COROFLOT_JOIN):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            SPACE_REMOVE = COROFLOT_JOIN.get_text()
+            SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {SPACE_REMOVE_RESULT}")
+
+    elif COROFLOT_URL_Request.status_code == 404:
+        print(f"\n[{B} COROFLOT{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
