@@ -1,4 +1,4 @@
-## List Of Supported Sites (35 Sites In Total!)
+## List Of Supported Sites (36 Sites In Total!)
 1. [Facebook](https://www.facebook.com/)
 2. [Twitter](https://twitter.com/)
 3. [Instagram](https://www.instagram.com/)
@@ -34,3 +34,4 @@
 33. [BUZZFEED](https://www.buzzfeed.com)
 34. [CNET](https://www.cnet.com/)
 35. [Coroflot](https://www.coroflot.com/)
+36. [COMMUNITY CRYPTOMATOR](https://community.cryptomator.org/)
