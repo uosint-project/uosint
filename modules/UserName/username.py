@@ -1602,6 +1602,47 @@ def Username_input(usernames):
         print(f"\n[{B} COROFLOT{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ COMMUNITY CRYPTOMATOR ]
+
+    COMMUNITY_CRYPTOMATOR_Url = f"https://community.cryptomator.org/u/{usernames}/summary"
+
+    COMMUNITY_CRYPTOMATOR_Request = requests.get(COMMUNITY_CRYPTOMATOR_Url)
+
+    if COMMUNITY_CRYPTOMATOR_Request.status_code == 200:
+
+        print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_CRYPTOMATOR_Url}")
+
+        COMMUNITY_CRYPTOMATOR_Soup = BeautifulSoup(COMMUNITY_CRYPTOMATOR_Request.text, "html.parser")
+
+        COMMUNITY_CRYPTOMATOR_NAME = COMMUNITY_CRYPTOMATOR_Soup.find('div', attrs={'class': 'user-crawler'})
+
+        COMMUNITY_CRYPTOMATOR_DESCRIPTION = COMMUNITY_CRYPTOMATOR_Soup.find('meta', property="og:description")
+
+        COMMUNITY_CRYPTOMATOR_PHOTO = COMMUNITY_CRYPTOMATOR_Soup.find('meta', property="og:image")
+
+        if (not COMMUNITY_CRYPTOMATOR_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_CRYPTOMATOR_NAME.find('h2', attrs={'class': 'username'}).getText()}")
+
+        if (not COMMUNITY_CRYPTOMATOR_DESCRIPTION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']}")
+
+        if (not COMMUNITY_CRYPTOMATOR_PHOTO):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
+
+
+    elif COMMUNITY_CRYPTOMATOR_Request.status_code == 404:
+        print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
