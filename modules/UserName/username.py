@@ -1643,6 +1643,48 @@ def Username_input(usernames):
         print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ DEV.TO ]
+
+    DEV_TO_Url = f"https://dev.to/{usernames}"
+
+    DEV_TO_Request = requests.get(DEV_TO_Url)
+
+    if DEV_TO_Request.status_code == 200:
+
+        print(f"\n[{B} DEV.TO{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEV_TO_Url}")
+
+        DEV_TO_Soup = BeautifulSoup(DEV_TO_Request.text, "html.parser")
+
+        DEV_TO_NAME = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__details'})
+
+        DEV_TO_BIO = DEV_TO_Soup.find("meta", property="og:description")
+
+        DEV_TO_WEBSITE = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__meta'}).find('a').find('span')
+
+        if (not DEV_TO_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEV_TO_NAME.find('h1', attrs={'class': 'crayons-title fw-heavy mb-2'}).getText()}")
+
+        if (not DEV_TO_BIO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEV_TO_BIO['content']}")
+
+        if (not DEV_TO_WEBSITE):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            space_remove = DEV_TO_WEBSITE.getText()
+            After_remove_space = space_remove.strip()
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {After_remove_space}")
+
+    elif DEV_TO_Request.status_code == 404:
+        print(f"\n[{B} DEV.TO{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
