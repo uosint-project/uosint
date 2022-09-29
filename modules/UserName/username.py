@@ -1697,7 +1697,7 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEVIANTART_Url}")
 
-        DEVIANTART_Soup = BeautifulSoup(DEVIANTART_Request.text, "html.parser")  # '', attrs={'': ''}
+        DEVIANTART_Soup = BeautifulSoup(DEVIANTART_Request.text, "html.parser")
 
         DEVIANTART_NAME = DEVIANTART_Soup.find('div', attrs={'class': '_2Ofv6'}).find('div',
                                                                                       attrs={'class': '_3oLE7'}).find(
@@ -1718,6 +1718,32 @@ def Username_input(usernames):
 
     elif DEVIANTART_Request.status_code == 404:
         print(f"\n[{B} DEVIANTART{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ EGPU ]
+
+    EGPU_Url = f"https://egpu.io/forums/profile/{usernames}/"
+
+    EGPU_Request = requests.get(EGPU_Url)
+
+    if EGPU_Request.status_code == 200:
+
+        print(f"\n[{B} EGPU{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EGPU_Url}")
+
+        EGPU_Soup = BeautifulSoup(EGPU_Request.text, "html.parser")
+
+        EGPU_NAME = EGPU_Soup.find('div', attrs={'class': 'wpf-breadcrumb'}).find('div', attrs={
+            'class': 'wpf-item-element active'})
+
+        if (not EGPU_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EGPU_NAME.string}")
+
+    elif EGPU_Request.status_code == 404:
+        print(f"\n[{B} EGPU{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
