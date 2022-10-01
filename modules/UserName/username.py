@@ -1746,6 +1746,58 @@ def Username_input(usernames):
         print(f"\n[{B} EGPU{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ COMMUNITY EINTRACHT ]
+
+    COMMUNITY_EINTRACHT_Url = f"https://community.eintracht.de/fans/{usernames}"
+
+    COMMUNITY_EINTRACHT_Request = requests.get(COMMUNITY_EINTRACHT_Url)
+
+    if COMMUNITY_EINTRACHT_Request.status_code == 200:
+
+        print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_EINTRACHT_Url}")
+
+        COMMUNITY_EINTRACHT_Soup = BeautifulSoup(COMMUNITY_EINTRACHT_Request.text,
+                                                 "html.parser")
+
+        COMMUNITY_EINTRACHT_NAME = COMMUNITY_EINTRACHT_Soup.find('div', attrs={'class': 'page-header'})
+
+        if (not COMMUNITY_EINTRACHT_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_EINTRACHT_NAME.string}")
+
+    elif COMMUNITY_EINTRACHT_Request.status_code == 404:
+        print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ HACKSTER.IO ]
+
+    HACKSTER_IO_Url = f"https://www.hackster.io/{usernames}"
+
+    HACKSTER_IO_Request = requests.get(HACKSTER_IO_Url)
+
+    if HACKSTER_IO_Request.status_code == 200:
+
+        print(f"\n[{B} HACKSTER IO{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKSTER_IO_Url}")
+
+        HACKSTER_IO_Soup = BeautifulSoup(HACKSTER_IO_Request.text, "html.parser")
+
+        HACKSTER_IO_NAME = HACKSTER_IO_Soup.find('div', attrs={'class': 'user_card__userInfo__wid7E'})
+
+        if (not HACKSTER_IO_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKSTER_IO_NAME.find('h1', attrs={'class': 'user_card__name__1QI2z'}).string}")
+
+    elif HACKSTER_IO_Request.status_code == 404:
+        print(f"\n[{B} HACKSTER IO{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
