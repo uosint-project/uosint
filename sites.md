@@ -40,3 +40,4 @@
 39. [EGPU](https://egpu.io/)
 40. [COMMUNITY EINTRACHT](https://community.eintracht.de/forum)
 41. [HACKSTER.IO](https://www.hackster.io)
+42. [SATSIS](https://satsis.info)
