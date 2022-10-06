@@ -1839,6 +1839,66 @@ def Username_input(usernames):
         print(f"\n[{B} SATSIS INFO{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ SESSIONIZE ]
+
+    SESSIONIZE_Url = f"https://sessionize.com/{usernames}/"
+
+    SESSIONIZE_Request = requests.get(SESSIONIZE_Url)
+
+    if SESSIONIZE_Request.status_code == 200:
+
+        print(f"\n[{B} SESSIONIZE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SESSIONIZE_Url}")
+
+        SESSIONIZE_Soup = BeautifulSoup(SESSIONIZE_Request.text, "html.parser")
+
+        PROFILE_IS_PRIVATE = SESSIONIZE_Soup.find('div', attrs={'class': 'panel-body'})
+
+        SESSIONIZE_NAME = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+        SESSIONIZE_ADDRESS = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+        SESSIONIZE_TAGLINE = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+        SESSIONIZE_PROFILE_PHOTO = SESSIONIZE_Soup.find('div',
+                                                        attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+        if (not PROFILE_IS_PRIVATE):
+
+            if (not SESSIONIZE_NAME):
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SESSIONIZE_NAME.find('h1', attrs={'class': 'c-s-speaker-info__name'}).string}")
+            if (not SESSIONIZE_PROFILE_PHOTO):
+                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {SESSIONIZE_PROFILE_PHOTO.find('figure', attrs={'class': 'c-s-speaker-info__avatar'}).findAll('img')[0].attrs['src']}")
+
+            if (not SESSIONIZE_TAGLINE):
+                print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {SESSIONIZE_TAGLINE.find('p', attrs={'class': 'c-s-speaker-info__tagline'}).string}")
+
+            if (not SESSIONIZE_ADDRESS):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                TEXT_TO_SPACE_REMOVE = SESSIONIZE_ADDRESS.find('p',
+                                                               attrs={'class': 'c-s-speaker-info__location'}).getText()
+                After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
+                print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {After_remove_seeking_space}")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Account {Y}:{RS} [ {R}{PROFILE_IS_PRIVATE.find('h3').getText()}{RS} ] {RS}")
+
+
+    elif SESSIONIZE_Request.status_code == 404:
+        print(f"\n[{B} SESSIONIZE{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
