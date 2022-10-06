@@ -298,12 +298,11 @@ def Username_input(usernames):
         if (not full_name_Github_tag):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, "")
+            name_THERMI_NAME_SPACE_REMOVE = full_name_Github_tag[0].getText()
 
-            string = full_name_Github_tag[0].getText()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User Followers
         if (not user_followers_Github_tag):
@@ -1722,7 +1721,7 @@ def Username_input(usernames):
 
     # [ EGPU ]
 
-    EGPU_Url = f"https://egpu.io/forums/profile/{usernames}/"
+    EGPU_Url = f"http://egpu.io/forums/profile/{usernames}/"
 
     EGPU_Request = requests.get(EGPU_Url)
 
@@ -1796,6 +1795,48 @@ def Username_input(usernames):
 
     elif HACKSTER_IO_Request.status_code == 404:
         print(f"\n[{B} HACKSTER IO{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ SATSIS_INFO ]
+
+    SATSIS_INFO_Url = f"https://satsis.info/user/{usernames}"
+
+    SATSIS_INFO_Request = requests.get(SATSIS_INFO_Url)
+
+    if SATSIS_INFO_Request.status_code == 200:
+
+        print(f"\n[{B} SATSIS INFO{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SATSIS_INFO_Url}")
+
+        SATSIS_INFO_Soup = BeautifulSoup(SATSIS_INFO_Request.text, "html.parser")
+
+        SATSIS_INFO_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[0]
+
+        REGISTRATION_DATE_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[2]
+
+        LAST_VISITED = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[3]
+
+        if (not SATSIS_INFO_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SATSIS_INFO_NAME.find_all_next('b')[0].getText()}")
+
+        if (not REGISTRATION_DATE_NAME):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {REGISTRATION_DATE_NAME.find_all_next('b')[0].getText()}")
+
+        if (not LAST_VISITED):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {LAST_VISITED.find_all_next('b')[0].getText()}")
+
+
+    elif SATSIS_INFO_Request.status_code == 404:
+        print(f"\n[{B} SATSIS INFO{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
