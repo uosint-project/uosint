@@ -1899,6 +1899,77 @@ def Username_input(usernames):
         print(f"\n[{B} SESSIONIZE{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ CLUBHOUSE ]
+
+    CLUBHOUSE_Url = f"https://www.clubhouse.com/@{usernames}"
+
+    CLUBHOUSE_Request = requests.get(CLUBHOUSE_Url)
+
+    if CLUBHOUSE_Request.status_code == 200:
+
+        print(f"\n[{B} CLUBHOUSE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CLUBHOUSE_Url}")
+
+        CLUBHOUSE_Soup = BeautifulSoup(CLUBHOUSE_Request.text, "html.parser")
+
+        PROFILE_NAME = CLUBHOUSE_Soup.find('div', attrs={'class': 'w-full ml-2'}).find('div', attrs={
+            'class': 'truncate text-lg sm:text-xl font-semibold'})
+
+        FOLLOWER_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
+            'class': 'flex items-end h-6 mt-2 max-w-xxs sm:max-w-xs md:max-w-sm'}).find('div', attrs={
+            'class': 'text-md sm:text-base font-semibold'})
+
+        FOLLOWING_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
+            'class': 'flex items-end h-6 mt-2 max-w-xxs sm:max-w-xs md:max-w-sm'}).find('div', attrs={
+            'class': 'text-md sm:text-base font-semibold ml-3'})
+
+        PROFILE_BIO = CLUBHOUSE_Soup.find('div', attrs={'class': 'mt-5 sm:mt-4 text-sm sm:text-md text-gray-800'})
+
+        PROFILE_PHOTO = CLUBHOUSE_Soup.find('div', attrs={'class': 'flex w-full'}).find('div', attrs={
+            'class': 'w-24 sm:w-40 h-16 sm:h-24 pr-1'})
+
+        if (not PROFILE_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {PROFILE_NAME.string}")
+
+        if (not FOLLOWER_PROFILE):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {FOLLOWER_PROFILE.string}")
+
+        if (not FOLLOWING_PROFILE):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {FOLLOWING_PROFILE.string}")
+
+        if (not PROFILE_BIO):
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            TEXT_TO_SPACE_REMOVE = PROFILE_BIO.getText()
+            After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
+            print(
+                f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
+
+        if (not PROFILE_PHOTO):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            PHOTO_LINK = PROFILE_PHOTO.find('div', attrs={
+                'class': 'w-18 h-18 sm:w-20 sm:h-20 bg-gray-200 mx-auto bg-center bg-cover border border-gray-400 rounded-ch'})[
+                             'style'][23:130]
+            PHOTO_LINK_REPLACE = PHOTO_LINK.replace("')", "")
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {PHOTO_LINK_REPLACE}")
+
+
+    elif CLUBHOUSE_Request.status_code == 404:
+        print(f"\n[{B} CLUBHOUSE{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
