@@ -3,6 +3,8 @@ from requests.structures import CaseInsensitiveDict
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
 from datetime import date
+import cssutils
+import re
 
 #############################
 #    COLORING YOUR SHELL    #
