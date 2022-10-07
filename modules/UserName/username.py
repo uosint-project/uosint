@@ -1956,14 +1956,14 @@ def Username_input(usernames):
                 f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
 
         if (not PROFILE_PHOTO):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             PHOTO_LINK = PROFILE_PHOTO.find('div', attrs={
                 'class': 'w-18 h-18 sm:w-20 sm:h-20 bg-gray-200 mx-auto bg-center bg-cover border border-gray-400 rounded-ch'})[
                              'style'][23:130]
             PHOTO_LINK_REPLACE = PHOTO_LINK.replace("')", "")
             print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {PHOTO_LINK_REPLACE}")
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {PHOTO_LINK_REPLACE}")
 
 
     elif CLUBHOUSE_Request.status_code == 404:
