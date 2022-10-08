@@ -3,7 +3,6 @@ from requests.structures import CaseInsensitiveDict
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
 from datetime import date
-import cssutils
 import re
 
 #############################
@@ -127,6 +126,18 @@ def Username_input(usernames):
                 print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {User_Bio_tag[0].getText()}")
 
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Suspended {Y}:{RS} [ {G}LIVE{RS} ] {RS}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}Twitter{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", User_Bio_tag[0].getText())
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
         else:
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Suspended {Y}:{RS} {suspended_twitters[0].getText()}")
 
@@ -225,6 +236,18 @@ def Username_input(usernames):
         print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_PERISCOPE['content']}")
         print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {Description_PERISCOPE['content']}")
 
+        print(
+            f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}VIMEO{RS} {C}Description{Y}{RS} ] \n")
+
+        email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                           r"@[A-Za-z0-9.-]+"
+                           r"\.[A-Za-z]{2,5}", Description_PERISCOPE['content'])
+
+        if (not email):
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+
     if VIMEO_Request.status_code == 404:
         print(f"\n[{B} VIMEO{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -310,56 +333,63 @@ def Username_input(usernames):
         if (not user_followers_Github_tag):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, " ")
+            name_THERMI_NAME_SPACE_REMOVE = user_followers_Github_tag[0].getText()
 
-            string = user_followers_Github_tag[0].getText()
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User Following
         if (not user_following_Github_tag):
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, "        ")
+            name_THERMI_NAME_SPACE_REMOVE = user_following_Github_tag[1].getText()
 
-            string = user_following_Github_tag[1].getText()
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User location
         if (not user_location_Github_tag):
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, "        ")
+            name_THERMI_NAME_SPACE_REMOVE = user_location_Github_tag[0].getText()
 
-            string = user_location_Github_tag[0].getText()
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User Working From
         if (not user_workfrom_organization_Github_tag):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, "        ")
+            name_THERMI_NAME_SPACE_REMOVE = user_workfrom_organization_Github_tag[0].getText()
 
-            string = user_workfrom_organization_Github_tag[0].getText()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User BIO
         if (not user_bio_Github_tag):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❌ {RS}")
         else:
-            def remove(string):
-                return string.replace("""
-              """, "        ")
+            name_THERMI_NAME_SPACE_REMOVE = user_bio_Github_tag[0].getText()
 
-            string = user_bio_Github_tag[0].getText()
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {remove(string)}")
+            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}GitHub{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", name_THERMI_SPACE_REMOVE_RESULT)
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
 
     elif Github_Request.status_code == 404:
@@ -579,6 +609,18 @@ def Username_input(usernames):
             else:
                 print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {profile_description.string}")
 
+                print(
+                    f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}LINKTR{RS} {C}Description{Y}{RS} ] \n")
+
+                email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                                   r"@[A-Za-z0-9.-]+"
+                                   r"\.[A-Za-z]{2,5}", profile_description.string)
+
+                if (not email):
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+                else:
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+
             if (not profile_image):
                 print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
             else:
@@ -666,6 +708,18 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BIO_TWITCH.get_text()}")
 
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}TWITCH{RS} {C}Description{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", BIO_TWITCH.get_text())
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+
         if (not PLAYER_Followers_TWITCHs):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
@@ -731,6 +785,17 @@ def Username_input(usernames):
         else:
             BIOS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'}).find('p')
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {BIOS.getText()}")
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}PROFILES WORDPRESS{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", BIOS.getText())
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
         if (not Member_Since_title):
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -1351,6 +1416,17 @@ def Username_input(usernames):
         else:
             print(
                 f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {FORUM_DANGEROUSTHINGS_BIO.getText()}")
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}FORUM DANGEROUSTHINGS{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", FORUM_DANGEROUSTHINGS_BIO.getText())
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
     elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
         print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
@@ -1461,6 +1537,18 @@ def Username_input(usernames):
         else:
             print(
                 f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BUY_ME_A_COFFEE_DESCRIPTION[1].getText()}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}Buy Me A Coffee{RS} {C}Description{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", BUY_ME_A_COFFEE_DESCRIPTION[1].getText())
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
         if (not BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS):
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -1634,10 +1722,22 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']}")
 
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}COMMUNITY CRYPTOMATOR{RS} {C}Description{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", COMMUNITY_CRYPTOMATOR_DESCRIPTION['content'])
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+
         if (not COMMUNITY_CRYPTOMATOR_PHOTO):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
 
 
     elif COMMUNITY_CRYPTOMATOR_Request.status_code == 404:
@@ -1674,6 +1774,18 @@ def Username_input(usernames):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEV_TO_BIO['content']}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}DEV TO{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", DEV_TO_BIO['content'])
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
         if (not DEV_TO_WEBSITE):
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -1715,6 +1827,18 @@ def Username_input(usernames):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEVIANTART_BIO.string}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}DEVIANTART{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", DEVIANTART_BIO.string)
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
 
     elif DEVIANTART_Request.status_code == 404:
@@ -1956,6 +2080,18 @@ def Username_input(usernames):
             After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
             print(
                 f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
+
+            print(
+                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}CLUBHOUSE{RS} {C}Bio{Y}{RS} ] \n")
+
+            email = re.findall(r"[A-Za-z0-9_%+-.]+"
+                               r"@[A-Za-z0-9.-]+"
+                               r"\.[A-Za-z]{2,5}", After_remove_seeking_space)
+
+            if (not email):
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
 
         if (not PROFILE_PHOTO):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
