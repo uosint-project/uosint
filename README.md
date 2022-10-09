@@ -35,6 +35,8 @@
 <span>• 💪 Information will be collected from many website such as <b>Social Media</b>, <b>Dating Platform</b>, <b>Music</b>, <b>Programming</b>, <b>Forum</b>, <b>Entertainment</b>, <b>Porn</b>, <b>Video Share Platform</b> </span>
 
 <span>• 📝 Sometime user write **Email** & **Phone Number** in there Bio, in that case **Email** & **Phone Number** will be **Detected** and if it is Email & Number will be search **Data Breached** & **Leaked DataBase** </span>
+  
+<span>• 🔮 Now this tool can will be **Detected**, **Email** & **Phone Number** & **Mention People** from USER Bio </span>
 
 ## Installation
 
