@@ -125,19 +125,50 @@ def Username_input(usernames):
             else:
                 print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {User_Bio_tag[0].getText()}")
 
+                UserMention_Bio = User_Bio_tag[0].getText()
+
+                Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                if (not Mention_Bio):
+                    print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                else:
+                    count = 0
+                    for Mention_Bios in Mention_Bio:
+                        count += 1
+                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                UserEmail = User_Bio_tag[0].getText()
+
+                emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                print(f"{' ' * 5}└[{G}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                if (not emails):
+                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                else:
+                    count = 0
+                for email in emails:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                PhoneNumberbio = User_Bio_tag[0].getText()
+
+                PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                if (not PhoneNumbers):
+                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                else:
+                    count = 0
+                for PhoneNumber in PhoneNumbers:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Suspended {Y}:{RS} [ {G}LIVE{RS} ] {RS}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}Twitter{RS} {C}Bio{Y}{RS} ] \n")
-
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", User_Bio_tag[0].getText())
-
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
         else:
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Suspended {Y}:{RS} {suspended_twitters[0].getText()}")
 
@@ -236,17 +267,47 @@ def Username_input(usernames):
         print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_PERISCOPE['content']}")
         print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {Description_PERISCOPE['content']}")
 
-        print(
-            f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}VIMEO{RS} {C}Description{Y}{RS} ] \n")
+        UserMention_Bio = Description_PERISCOPE['content']
 
-        email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                           r"@[A-Za-z0-9.-]+"
-                           r"\.[A-Za-z]{2,5}", Description_PERISCOPE['content'])
+        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-        if (not email):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Description{Y}:{RS}")
+
+        if (not Mention_Bio):
+            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
         else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+            count = 0
+            for Mention_Bios in Mention_Bio:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+        UserEmail = Description_PERISCOPE['content']
+
+        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Description{Y}:{RS}")
+
+        if (not emails):
+            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
+        else:
+            count = 0
+        for email in emails:
+            count += 1
+            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Description{Y}:{RS}")
+
+        PhoneNumberbio = Description_PERISCOPE['content']
+
+        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+        if (not PhoneNumbers):
+            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            count = 0
+        for PhoneNumber in PhoneNumbers:
+            count += 1
+            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
     if VIMEO_Request.status_code == 404:
         print(f"\n[{B} VIMEO{RS} ]")
@@ -379,17 +440,47 @@ def Username_input(usernames):
 
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}GitHub{RS} {C}Bio{Y}{RS} ] \n")
+            UserMention_Bio = name_THERMI_SPACE_REMOVE_RESULT
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", name_THERMI_SPACE_REMOVE_RESULT)
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = name_THERMI_SPACE_REMOVE_RESULT
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = name_THERMI_SPACE_REMOVE_RESULT
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
 
     elif Github_Request.status_code == 404:
@@ -508,7 +599,7 @@ def Username_input(usernames):
         if Tinder_title:
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Tinder_Url}")
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {Tinder_title['content']}")
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Image {Y}:{RS} {Tinder_Image['content']}")
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {Tinder_Image['content']}")
         else:
             print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
 
@@ -600,7 +691,7 @@ def Username_input(usernames):
 
         if (not NOT_verified):
             if (not profile_name):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
             else:
                 print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {profile_name.string}")
 
@@ -609,22 +700,52 @@ def Username_input(usernames):
             else:
                 print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {profile_description.string}")
 
-                print(
-                    f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}LINKTR{RS} {C}Description{Y}{RS} ] \n")
+                UserMention_Bio = profile_description.string
 
-                email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                                   r"@[A-Za-z0-9.-]+"
-                                   r"\.[A-Za-z]{2,5}", profile_description.string)
+                Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-                if (not email):
-                    print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+                print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                if (not Mention_Bio):
+                    print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
                 else:
-                    print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                    count = 0
+                    for Mention_Bios in Mention_Bio:
+                        count += 1
+                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                UserEmail = profile_description.string
+
+                emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                if (not emails):
+                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                else:
+                    count = 0
+                for email in emails:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                PhoneNumberbio = profile_description.string
+
+                PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                if (not PhoneNumbers):
+                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                else:
+                    count = 0
+                for PhoneNumber in PhoneNumbers:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
             if (not profile_image):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
+                print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
             else:
-                print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {profile_image['content']}")
+                print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {profile_image['content']}")
         else:
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Image {Y}:{RS} {NOT_verified.string}")
 
@@ -661,7 +782,7 @@ def Username_input(usernames):
         str = remove(string)
         new_str = str.strip()
         print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_XBOX.getText()}")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Gamer Score {Y}:{RS} {new_str}")
+        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Gamer Score {Y}:{RS} {new_str}")
 
     if XBOXGAMERTAG_Request.status_code == 404:
         print(f"\n[{B} XBOX GAMER{RS} ]")
@@ -708,24 +829,54 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BIO_TWITCH.get_text()}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}TWITCH{RS} {C}Description{Y}{RS} ] \n")
+            UserMention_Bio = BIO_TWITCH.get_text()
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", BIO_TWITCH.get_text())
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = BIO_TWITCH.get_text()
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = BIO_TWITCH.get_text()
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not PLAYER_Followers_TWITCHs):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Player Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             PLAYER_FOLLOWERSS_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;").find('span',
                                                                                                      class_="to-number")
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Player Followers {Y}:{RS} {PLAYER_FOLLOWERSS_TWITCHs.string}")
+            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Player Followers {Y}:{RS} {PLAYER_FOLLOWERSS_TWITCHs.string}")
 
         if (not PLAYER_RANK_TWITCH):
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player RANK {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -785,23 +936,54 @@ def Username_input(usernames):
         else:
             BIOS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'}).find('p')
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {BIOS.getText()}")
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}PROFILES WORDPRESS{RS} {C}Bio{Y}{RS} ] \n")
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", BIOS.getText())
+            UserMention_Bio = BIOS.getText()
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = BIOS.getText()
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = BIOS.getText()
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not Member_Since_title):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             Member_Since_titleS = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-member-since'}).find('strong')
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {Member_Since_titleS.get_text()}")
+            print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {Member_Since_titleS.get_text()}")
 
         if (not location_name):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -1416,17 +1598,48 @@ def Username_input(usernames):
         else:
             print(
                 f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {FORUM_DANGEROUSTHINGS_BIO.getText()}")
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}FORUM DANGEROUSTHINGS{RS} {C}Bio{Y}{RS} ] \n")
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", FORUM_DANGEROUSTHINGS_BIO.getText())
+            UserMention_Bio = FORUM_DANGEROUSTHINGS_BIO.getText()
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = FORUM_DANGEROUSTHINGS_BIO.getText()
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = FORUM_DANGEROUSTHINGS_BIO.getText()
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{B}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
     elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
         print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
@@ -1538,23 +1751,53 @@ def Username_input(usernames):
             print(
                 f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BUY_ME_A_COFFEE_DESCRIPTION[1].getText()}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}Buy Me A Coffee{RS} {C}Description{Y}{RS} ] \n")
+            UserMention_Bio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", BUY_ME_A_COFFEE_DESCRIPTION[1].getText())
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             print(
-                f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS.attrs['data-src']}")
+                f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS.attrs['data-src']}")
 
 
     elif BUY_ME_A_COFFEE_URL_Request.status_code == 404:
@@ -1722,22 +1965,52 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}COMMUNITY CRYPTOMATOR{RS} {C}Description{Y}{RS} ] \n")
+            UserMention_Bio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", COMMUNITY_CRYPTOMATOR_DESCRIPTION['content'])
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not COMMUNITY_CRYPTOMATOR_PHOTO):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
+            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
 
 
     elif COMMUNITY_CRYPTOMATOR_Request.status_code == 404:
@@ -1775,17 +2048,47 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEV_TO_BIO['content']}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}DEV TO{RS} {C}Bio{Y}{RS} ] \n")
+            UserMention_Bio = DEV_TO_BIO['content']
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", DEV_TO_BIO['content'])
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = DEV_TO_BIO['content']
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = DEV_TO_BIO['content']
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not DEV_TO_WEBSITE):
             print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {R}Not Found ❗️{RS} ")
@@ -1828,17 +2131,47 @@ def Username_input(usernames):
         else:
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEVIANTART_BIO.string}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}DEVIANTART{RS} {C}Bio{Y}{RS} ] \n")
+            UserMention_Bio = DEVIANTART_BIO.string
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", DEVIANTART_BIO.string)
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = DEVIANTART_BIO.string
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = DEVIANTART_BIO.string
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
 
     elif DEVIANTART_Request.status_code == 404:
@@ -2081,17 +2414,47 @@ def Username_input(usernames):
             print(
                 f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
 
-            print(
-                f" \n {' ' * 5}[ {G}NOTE{RS} ] [ {P}Try To {G}Email {C}Find From {B}CLUBHOUSE{RS} {C}Bio{Y}{RS} ] \n")
+            UserMention_Bio = After_remove_seeking_space
 
-            email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                               r"@[A-Za-z0-9.-]+"
-                               r"\.[A-Za-z]{2,5}", After_remove_seeking_space)
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
 
-            if (not email):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {R}Not Found ❗️{RS} ")
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
             else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}Email GET {Y}:{RS} {email} {RS} ")
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = After_remove_seeking_space
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = After_remove_seeking_space
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
         if (not PROFILE_PHOTO):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
