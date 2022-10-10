@@ -2553,6 +2553,33 @@ def Username_input(usernames):
         print(f"\n[{B} CONTENTLY{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ DISCOGS ]
+
+    DISCOGS_Url = f"https://www.discogs.com/user/{usernames}"
+
+    DISCOGS_Request = requests.get(DISCOGS_Url)
+
+    if DISCOGS_Request.status_code == 200:
+
+        print(f"\n[{B} DISCOGS{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DISCOGS_Url}")
+
+        DISCOGS_Soup = BeautifulSoup(DISCOGS_Request.text, "html.parser")
+
+        DISCOGS_Joined = DISCOGS_Soup.find('div', attrs={'class': 'aside_left aside_narrow'})
+
+        if (not DISCOGS_Joined):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            Joined_REPLACE = DISCOGS_Joined.find('ul').find('li').string.replace("Joined on ", " ")
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Joined {Y}:{RS} {Joined_REPLACE}")
+
+    elif DISCOGS_Request.status_code == 404:
+        print(f"\n[{B} DISCOGS{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
