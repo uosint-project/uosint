@@ -76,6 +76,12 @@ Our target in this project is to extract information from 300+ websites and we w
   <br>
   <a target="_blank"><img src="./modules/image/usernames.PNG"></a></br>
 </p>
+
+## WorkFlow
+<p align=center>
+  <br>
+  <a target="_blank"><img src="./modules/image/WorkFlow.PNG"></a></br>
+</p>
   
 ## License
 
