@@ -2580,6 +2580,72 @@ def Username_input(usernames):
         print(f"\n[{B} DISCOGS{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ DOCKER ]
+
+    docker_url = f"https://hub.docker.com/v2/users/{usernames}/"
+
+    docker_request = requests.get(docker_url)
+
+    docker_json = json.loads(docker_request.content)
+
+    if docker_request.status_code == 404:
+        print(f"\n[{B} DOCKER{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}User not found ❗️{RS}")
+
+    if docker_request.status_code == 200:
+        print(f"\n[{B} DOCKER{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {f'https://hub.docker.com/u/{usernames}'}")
+
+        if (not docker_json['full_name']):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {docker_json['full_name']}")
+
+        if (not docker_json['location']):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {docker_json['location']}")
+
+        if (not docker_json['company']):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Company {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Company {Y}:{RS} {docker_json['company']}")
+
+        if (not docker_json['profile_url']):
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Profile Url {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{R}•{RS}] {C}User Profile Url {Y}:{RS} {docker_json['profile_url']}")
+
+        if (not docker_json['date_joined']):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Joined Date {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Joined Date {Y}:{RS} {docker_json['date_joined']}")
+
+        if (not docker_json['gravatar_url']):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {docker_json['gravatar_url']}")
+
+        if (not docker_json['gravatar_email']):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Email {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Email {Y}:{RS} {docker_json['gravatar_email']}")
+
+        if (not docker_json['type']):
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Type {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{R}•{RS}] {C}User Type {Y}:{RS} {docker_json['type']}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
