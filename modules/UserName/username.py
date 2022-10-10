@@ -2471,6 +2471,88 @@ def Username_input(usernames):
         print(f"\n[{B} CLUBHOUSE{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ CONTENTLY ]
+
+    CONTENTLY_Url = f"https://{usernames}.contently.com/"
+
+    CONTENTLY_Request = requests.get(CONTENTLY_Url)
+
+    if CONTENTLY_Request.status_code == 200:
+
+        print(f"\n[{B} CONTENTLY{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CONTENTLY_Url}")
+
+        CONTENTLY_Soup = BeautifulSoup(CONTENTLY_Request.text, "html.parser")
+
+        CONTENTLY_NAME = CONTENTLY_Soup.find('meta', attrs={'name': 'author'})
+        CONTENTLY_DESCRIPTION = CONTENTLY_Soup.find('meta', attrs={'name': 'description'})
+        CONTENTLY_IMAGE = CONTENTLY_Soup.find('meta', attrs={'property': 'og:image'})
+
+        if (not CONTENTLY_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {CONTENTLY_NAME['content']}")
+
+        if (not CONTENTLY_DESCRIPTION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {CONTENTLY_DESCRIPTION['content']}")
+
+            UserMention_Bio = CONTENTLY_DESCRIPTION['content']
+
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Description{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = CONTENTLY_DESCRIPTION['content']
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Description{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Description{Y}:{RS}")
+
+            PhoneNumberbio = CONTENTLY_DESCRIPTION['content']
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+        if (not CONTENTLY_IMAGE):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {CONTENTLY_IMAGE['content']}")
+
+    elif CONTENTLY_Request.status_code == 404:
+        print(f"\n[{B} CONTENTLY{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
