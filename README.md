@@ -80,7 +80,7 @@ Our target in this project is to extract information from 300+ websites and we w
 ## WorkFlow
 <p align=center>
   <br>
-  <a target="_blank"><img src="./modules/image/WorkFlow.PNG"></a></br>
+  <a target="_blank"><img src="./modules/image/WorkFlow.jpg"></a></br>
 </p>
   
 ## License
