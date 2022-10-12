@@ -2750,6 +2750,92 @@ def Username_input(usernames):
         print(f"\n[{B} DRIBBBLE{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ EYEEM ]
+
+    EYEEM_Url = f"https://www.eyeem.com/u/{usernames}"
+
+    EYEEM_Request = requests.get(EYEEM_Url)
+
+    if EYEEM_Request.status_code == 200:
+
+        print(f"\n[{B} EYEEM{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EYEEM_Url}")
+
+        EYEEM_Soup = BeautifulSoup(EYEEM_Request.text, "html.parser")
+
+        EYEEM_NAME = EYEEM_Soup.find('div', attrs={'class': 'css-64wcgg'}).find('h1',
+                                                                                attrs={'class': 'css-a88me eulhdfc0'})
+
+        EYEEM_BIO = EYEEM_Soup.find('div', attrs={'class': 'css-1mpr9jb eqclr3s0'})
+
+        EYEEM_PROFILE_PHOTO = EYEEM_Soup.find('div', attrs={'class': 'css-kx2m0z'})
+
+        if (not EYEEM_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EYEEM_NAME.string}")
+
+        if (not EYEEM_PROFILE_PHOTO):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {EYEEM_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
+
+        if (not EYEEM_BIO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string}")
+
+            UserMention_Bio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+
+    elif EYEEM_Request.status_code == 404:
+        print(f"\n[{B} EYEEM{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
