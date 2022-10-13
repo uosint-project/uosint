@@ -2836,6 +2836,95 @@ def Username_input(usernames):
         print(f"\n[{B} EYEEM{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ FANDOM ]
+
+    FANDOM_Url = f"https://www.fandom.com/u/{usernames}"
+
+    FANDOM_Request = requests.get(FANDOM_Url)
+
+    if FANDOM_Request.status_code == 200:
+
+        print(f"\n[{B} FANDOM{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {FANDOM_Url}")
+
+        FANDOM_Soup = BeautifulSoup(FANDOM_Request.text, "html.parser")
+
+        FANDOM_NAME = FANDOM_Soup.find('div', attrs={'class': 'profile-info-card__info'}).find('h1', attrs={
+            'class': 'profile-info-card__name'})
+
+        FANDOM_ABOUT = FANDOM_Soup.find('div', attrs={'class': 'profile-info-card__about'})
+
+        FANDOM_PROFILE_PHOTO = FANDOM_Soup.find('div', attrs={'class': 'profile-avatar__avatar'})
+
+        # print(FANDOM_PROFILE_PHOTO)
+
+        if (not FANDOM_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FANDOM_NAME.string}")
+
+        if (not FANDOM_ABOUT):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User About {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User About {Y}:{RS} {FANDOM_ABOUT.string}")
+
+            UserMention_Bio = FANDOM_ABOUT.string
+
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = FANDOM_ABOUT.string
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = FANDOM_ABOUT.string
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}\n")
+
+        if (not FANDOM_PROFILE_PHOTO):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {FANDOM_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
+
+    elif FANDOM_Request.status_code == 404:
+
+        print(f"\n[{B} FANDOM{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
