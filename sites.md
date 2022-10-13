@@ -1,7 +1,7 @@
 ## List Of Supported Sites (50 Sites In Total!)
 
-1.  ![](https://www.google.com/s2/favicons?domain=https://facebook.com/) [FACEBOOK](https://www.facebook.com)
-2. [Twitter](https://twitter.com/)
+1. ![](https://www.google.com/s2/favicons?domain=https://facebook.com/) [FACEBOOK](https://www.facebook.com)
+2. ![](https://www.google.com/s2/favicons?domain=https://twitter.com/) [Twitter](https://www.twitter.com)
 3. [Instagram](https://www.instagram.com/)
 4. [Pinterest](https://www.pinterest.com/)
 5. [YouTube](https://www.youtube.com/)
