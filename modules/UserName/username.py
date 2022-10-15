@@ -2925,6 +2925,40 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ FLIGHTRADAR24 ]
+
+    FLIGHTRADAR24_URL = f"https://my.flightradar24.com/{usernames}"
+
+    FLIGHTRADAR24_Request = requests.get(FLIGHTRADAR24_URL)
+
+    if FLIGHTRADAR24_Request.status_code == 200:
+
+        print(f"\n[{B} FLIGHTRADAR24{RS} ]")
+
+        FLIGHTRADAR24_Soup = BeautifulSoup(FLIGHTRADAR24_Request.text, "html.parser")
+
+        FLIGHTRADAR24_FULL_NAME = FLIGHTRADAR24_Soup.find('div', attrs={'class': 'container profile-container'})
+
+        FLIGHTRADAR24_ACCOUNT_PRIVATE = FLIGHTRADAR24_Soup.find('div', attrs={'class': 'container'}).find('h1')
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {FLIGHTRADAR24_URL}")
+
+        if (not FLIGHTRADAR24_ACCOUNT_PRIVATE):
+
+            if (not FLIGHTRADAR24_FULL_NAME):
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FLIGHTRADAR24_FULL_NAME.find('h3').getText()}")
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Private {Y}:{RS} [ {G}LIVE{RS} ] {RS}️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Private {Y}:{RS} {FLIGHTRADAR24_ACCOUNT_PRIVATE.getText()}")
+
+    elif FLIGHTRADAR24_Request.status_code == 404:
+        print(f"\n[{B} FLIGHTRADAR24{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
