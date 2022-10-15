@@ -1345,7 +1345,8 @@ def Username_input(usernames):
         INDEPENDENT_ACADEMIA_Soup = BeautifulSoup(INDEPENDENT_ACADEMIA_Request.text, "html.parser")
 
         INDEPENDENT_ACADEMIA_FULL_NAME = INDEPENDENT_ACADEMIA_Soup.find('div',
-                                                                        attrs={'class': 'profile-info-container'})
+                                                                        attrs={'class': 'profile-info-container'}).find(
+            'h1', attrs={'class': 'ds-product-heading-lg'})
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {INDEPENDENT_ACADEMIA_URL}")
 
@@ -1353,8 +1354,7 @@ def Username_input(usernames):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
             print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {INDEPENDENT_ACADEMIA_FULL_NAME.find('li', attrs={'class': 'InlineList-item u-fontSerif u-fs24 u-lineHeight1_2'}).getText()}")
-
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {INDEPENDENT_ACADEMIA_FULL_NAME.string}")
 
     elif INDEPENDENT_ACADEMIA_Request.status_code == 404:
         print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
