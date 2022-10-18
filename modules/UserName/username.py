@@ -376,7 +376,6 @@ def Username_input(usernames):
         user_name_Github_tag = Github_Soup.find_all(class_="p-nickname vcard-username d-block")
         user_bio_Github_tag = Github_Soup.find_all(class_="p-note user-profile-bio mb-3 js-user-profile-bio f4")
         user_followers_Github_tag = Github_Soup.find_all(class_="text-bold color-fg-default")
-        user_following_Github_tag = Github_Soup.find_all(class_="text-bold color-fg-default")
         user_workfrom_organization_Github_tag = Github_Soup.find_all(class_="p-org")
         user_location_Github_tag = Github_Soup.find_all(class_="p-label")
 
@@ -399,16 +398,6 @@ def Username_input(usernames):
             name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
 
             print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        # User Following
-        if (not user_following_Github_tag):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = user_following_Github_tag[1].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
 
         # User location
         if (not user_location_Github_tag):
