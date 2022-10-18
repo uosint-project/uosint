@@ -2984,6 +2984,44 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ PLUGINS.GRADLE ]
+
+    PLUGINS_GRADLE_URL = f"https://plugins.gradle.org/u/{usernames}"
+
+    PLUGINS_GRADLE_Request = requests.get(PLUGINS_GRADLE_URL)
+
+    if PLUGINS_GRADLE_Request.status_code == 200:
+
+        print(f"\n[{B} PLUGINS_GRADLE{RS} ]")
+
+        PLUGINS_GRADLE_Soup = BeautifulSoup(PLUGINS_GRADLE_Request.text, "html.parser")
+
+        PLUGINS_GRADLE_FULL_NAME = PLUGINS_GRADLE_Soup.find('div', attrs={'class': 'col-md-4'}).find('div', attrs={
+            'id': 'name'})
+
+        PLUGINS_GRADLE_JOINED = PLUGINS_GRADLE_Soup.find('div', attrs={'class': 'col-md-4'}).find('div', attrs={
+            'id': 'joined'})
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {PLUGINS_GRADLE_URL}")
+
+        if (not PLUGINS_GRADLE_FULL_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {PLUGINS_GRADLE_FULL_NAME.string}")
+
+        if (not PLUGINS_GRADLE_JOINED):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {PLUGINS_GRADLE_JOINED.string}")
+
+    elif PLUGINS_GRADLE_Request.status_code == 404:
+
+        print(f"\n[{B} PLUGINS_GRADLE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
