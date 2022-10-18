@@ -1,4 +1,4 @@
-## List Of Supported Sites (52 Sites In Total!)
+## List Of Supported Sites (53 Sites In Total!)
 
 1. [FACEBOOK](https://www.facebook.com) ![](https://www.google.com/s2/favicons?domain=https://facebook.com/) 
 2. [Twitter](https://www.twitter.com) ![](https://www.google.com/s2/favicons?domain=https://twitter.com/)
@@ -52,3 +52,4 @@
 50. [FANDOM](https://www.fandom.com/) ![](https://www.google.com/s2/favicons?domain=https://www.fandom.com/)
 51. [FLIGHTRADAR24](https://my.flightradar24.com) ![](https://www.google.com/s2/favicons?domain=https://my.flightradar24.com)
 52. [GITEE](https://gitee.com/) ![](https://www.google.com/s2/favicons?domain=https://gitee.com/)
+53. [PLUGINS_GRADLE](https://plugins.gradle.org) ![](https://www.google.com/s2/favicons?domain=https://plugins.gradle.org)
