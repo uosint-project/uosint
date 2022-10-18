@@ -2857,8 +2857,6 @@ def Username_input(usernames):
 
         FANDOM_PROFILE_PHOTO = FANDOM_Soup.find('div', attrs={'class': 'profile-avatar__avatar'})
 
-        # print(FANDOM_PROFILE_PHOTO)
-
         if (not FANDOM_NAME):
             print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
         else:
@@ -2957,6 +2955,44 @@ def Username_input(usernames):
 
     elif FLIGHTRADAR24_Request.status_code == 404:
         print(f"\n[{B} FLIGHTRADAR24{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ GITEE ]
+
+    GITEE_URL = f"https://gitee.com/{usernames}"
+
+    GITEE_Request = requests.get(GITEE_URL)
+
+    if GITEE_Request.status_code == 200:
+
+        print(f"\n[{B} GITEE{RS} ]")
+
+        GITEE_Soup = BeautifulSoup(GITEE_Request.text, "html.parser")
+
+        GITEE_FULL_NAME = GITEE_Soup.find('div', attrs={'class': 'users__personal-name'}).find('span')
+
+        GITEE_BIO = GITEE_Soup.find('div', attrs={'class': 'users__personal-name'}).find('p', attrs={'class': 'bio'})
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {GITEE_URL}")
+
+        if (not GITEE_FULL_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            space_remove = GITEE_FULL_NAME.getText()
+            After_remove_space = space_remove.strip()
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {After_remove_space}")
+
+        if (not GITEE_BIO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {GITEE_BIO.string}")
+
+    elif GITEE_Request.status_code == 404:
+
+        print(f"\n[{B} GITEE{RS} ]")
+
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
