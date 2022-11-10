@@ -177,28 +177,6 @@ def Username_input(usernames):
         print(f"\n[{B} TWITTER{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS}")
 
-    # [ pinterest ]
-
-    pinterest_Url = f"https://www.pinterest.com/{usernames}"
-
-    pinterest_Request = requests.request("GET", pinterest_Url)
-
-    if pinterest_Request.status_code == 200:
-        print(f"\n[{B} PINTEREST{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {pinterest_Url}")
-        Pinterest_Soup = BeautifulSoup(pinterest_Request.text, "html.parser")
-        full_name_Pinterest_tag = Pinterest_Soup.find_all(class_="FNs zI7 iyn Hsu")
-        Follower_Pinterest_tag = Pinterest_Soup.find_all(class_="tBJ dyH iFc sAJ O2T zDA IZT mWe")
-
-        if (not full_name_Pinterest_tag):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {full_name_Pinterest_tag[0].getText()}")
-
-    elif pinterest_Request.status_code == 404:
-        print(f"\n[{B} PINTEREST{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
-
     # [ YouTube ]
 
     YouTube_Url = f"https://www.youtube.com/user/{usernames}"
@@ -312,27 +290,6 @@ def Username_input(usernames):
     if VIMEO_Request.status_code == 404:
         print(f"\n[{B} VIMEO{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
-
-    # [ DAILYMOTION ]
-
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
-
-    dailymotion_Url = f"https://www.dailymotion.com/{usernames}"
-
-    dailymotion_Request = requests.request("GET", dailymotion_Url, headers=headers)
-
-    if dailymotion_Request.status_code == 200:
-        print(f"\n[{B} DAILYMOTION{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {dailymotion_Url}")
-        dailymotion_Soup = BeautifulSoup(dailymotion_Request.text, "html.parser")
-        full_name_DAILYMOTION_tag = dailymotion_Soup.find_all("title")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {full_name_DAILYMOTION_tag[0].getText()}")
-
-    elif dailymotion_Request.status_code == 404:
-        print(f"\n[{B} DAILYMOTION{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     # [ Caffeine_TV ]
 
