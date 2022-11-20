@@ -53,3 +53,4 @@
 51. [FLIGHTRADAR24](https://my.flightradar24.com) ![](https://www.google.com/s2/favicons?domain=https://my.flightradar24.com)
 52. [GITEE](https://gitee.com/) ![](https://www.google.com/s2/favicons?domain=https://gitee.com/)
 53. [PLUGINS_GRADLE](https://plugins.gradle.org) ![](https://www.google.com/s2/favicons?domain=https://plugins.gradle.org)
+54. [HACKADAY](https://hackaday.io) ![](https://www.google.com/s2/favicons?domain=https://hackaday.io)
