@@ -2979,6 +2979,43 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ HACKADAY ]
+
+    HACKADAY_URL = f"https://hackaday.io/{usernames}"
+
+    HACKADAY_Request = requests.get(HACKADAY_URL)
+
+    if HACKADAY_Request.status_code == 200:
+
+        print(f"\n[{B} HACKADAY{RS} ]")
+
+        HACKADAY_Soup = BeautifulSoup(HACKADAY_Request.text, "html.parser")
+
+        HACKADAY_FULL_NAME = HACKADAY_Soup.find('div', attrs={'class': 'container'}).find('h1')
+
+        HACKADAY_DESCRIPTION = HACKADAY_Soup.find('div', attrs={'class': 'container'}).find('p', attrs={
+            'class': 'description'})
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {HACKADAY_URL}")
+
+        if (not HACKADAY_FULL_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKADAY_FULL_NAME.string}")
+
+        if (not HACKADAY_DESCRIPTION):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {HACKADAY_DESCRIPTION.string}")
+
+    elif HACKADAY_Request.status_code == 404:
+
+        print(f"\n[{B} HACKADAY{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
