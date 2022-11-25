@@ -41,7 +41,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} FACEBOOK{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}") 
 
         Facebook_Soup = BeautifulSoup(Facebook_Request.text, "html.parser")
 
