@@ -3016,6 +3016,31 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ HACKEREARTH ]
+
+    url = f"https://www.hackerearth.com/profiles/api/{usernames}/personal-details/"
+
+    HACKEREARTH_RESPONSE = requests.request("GET", url)
+
+    if HACKEREARTH_RESPONSE.status_code == 200:
+
+        HACKEREARTH_JSON = json.loads(HACKEREARTH_RESPONSE.content)
+
+        print(f"\n[{B} HACKEREARTH{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {f'https://www.hackerearth.com/@{usernames}'}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKEREARTH_JSON.get('full_name')}")
+        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {HACKEREARTH_JSON.get('location')}")
+        print(f"{' ' * 5}└[{G}•{RS}] {C}User Facebook {Y}:{RS} {HACKEREARTH_JSON.get('facebook')}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Linkedin {Y}:{RS} {HACKEREARTH_JSON.get('linkedin')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User GitHub {Y}:{RS} {HACKEREARTH_JSON.get('github')}")
+        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Twitter {Y}:{RS} {HACKEREARTH_JSON.get('twitter')}")
+        print(f"{' ' * 5}└[{G}•{RS}] {C}User Blog {Y}:{RS} {HACKEREARTH_JSON.get('blog')}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Website {Y}:{RS} {HACKEREARTH_JSON.get('website')}")
+
+    elif HACKEREARTH_RESPONSE.status_code == 400:
+        print(f"\n[{B} HACKEREARTH{RS} ]")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
