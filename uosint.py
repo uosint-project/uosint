@@ -12,7 +12,7 @@ RS = "\033[0m"
 W = "\033[1;37m"
 P = "\033[35m"
 C = '\033[36m'
-BL = '\033[1m'
+BL = '\033[1m' 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-e', '--email', help=(f'Sometime {P}USER{RS} write {P}Email{RS} in there {P}Bio{RS}, in that case you will take that Email {Y}.{RS}'))
