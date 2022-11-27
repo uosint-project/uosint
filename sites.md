@@ -55,3 +55,5 @@
 53. [PLUGINS_GRADLE](https://plugins.gradle.org) ![](https://www.google.com/s2/favicons?domain=https://plugins.gradle.org)
 54. [HACKADAY](https://hackaday.io) ![](https://www.google.com/s2/favicons?domain=https://hackaday.io)
 55. [Hacker Earth](https://www.hackerearth.com) ![](https://www.google.com/s2/favicons?domain=https://www.hackerearth.com)
+56. [NEWS YCOMBINATOR](https://news.ycombinator.com) ![](https://www.google.com/s2/favicons?domain=https://news.ycombinator.com)
+57. [HACKERONE](https://hackerone.com) ![](https://www.google.com/s2/favicons?domain=https://hackerone.com)
