@@ -41,7 +41,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} FACEBOOK{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}") 
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}")
 
         Facebook_Soup = BeautifulSoup(Facebook_Request.text, "html.parser")
 
@@ -3040,6 +3040,125 @@ def Username_input(usernames):
     elif HACKEREARTH_RESPONSE.status_code == 400:
         print(f"\n[{B} HACKEREARTH{RS} ]")
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
+    # [ NEWS_YCOMBINATOR ]
+
+    NEWS_YCOMBINATOR_url = f"https://news.ycombinator.com/user?id={usernames}"
+
+    NEWS_YCOMBINATOR_RESPONSE = requests.request("GET", NEWS_YCOMBINATOR_url)
+
+    if NEWS_YCOMBINATOR_RESPONSE.status_code == 200:
+
+        NEWS_YCOMBINATOR_Soup = BeautifulSoup(NEWS_YCOMBINATOR_RESPONSE.text, "html.parser")
+
+        if NEWS_YCOMBINATOR_Soup.string == 'No such user.':
+
+            print(f"\n[{B} NEWS YCOMBINATOR{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        else:
+
+            NEWS_YCOMBINATOR_NAME = NEWS_YCOMBINATOR_Soup.find('tr', attrs={'class': 'athing'})
+
+            print(f"\n[{B} NEWS YCOMBINATOR{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {NEWS_YCOMBINATOR_url}")
+
+            if (not NEWS_YCOMBINATOR_NAME):
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {NEWS_YCOMBINATOR_NAME.find('a', attrs={'class': 'hnuser'}).string}")
+    # [ HACKERONE ]
+
+    HACKERONE_url = f"https://hackerone.com/{usernames}?type=user"
+
+    HACKERONE_RESPONSE = requests.request("GET", HACKERONE_url)
+
+    if HACKERONE_RESPONSE.status_code == 200:
+
+        HACKERONE_Soup = BeautifulSoup(HACKERONE_RESPONSE.text, "html.parser")
+
+        HACKERONE_DESCRIPTION = HACKERONE_Soup.find('meta', property="og:description")
+
+        HACKERONE_PROFILE_PIC = HACKERONE_Soup.find('meta', property="og:image")
+
+        HACKERONE_NAME = HACKERONE_Soup.find('meta', property="og:title")
+
+        print(f"\n[{B} HACKERONE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKERONE_url}")
+
+        if (not HACKERONE_DESCRIPTION):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+
+            Name_HACKERONE = HACKERONE_NAME['content']
+
+            FINAL_NAME = Name_HACKERONE.replace('HackerOne profile - ', '')
+
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Profile Name {Y}:{RS} {FINAL_NAME}")
+
+        if (not HACKERONE_DESCRIPTION):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {HACKERONE_DESCRIPTION['content']}")
+
+            UserMention_Bio = HACKERONE_DESCRIPTION['content']
+
+            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+            if (not Mention_Bio):
+                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+                for Mention_Bios in Mention_Bio:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+            UserEmail = HACKERONE_DESCRIPTION['content']
+
+            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+            if (not emails):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for email in emails:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+            PhoneNumberbio = HACKERONE_DESCRIPTION['content']
+
+            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+            if (not PhoneNumbers):
+                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            else:
+                count = 0
+            for PhoneNumber in PhoneNumbers:
+                count += 1
+                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+        if (not HACKERONE_PROFILE_PIC):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {HACKERONE_PROFILE_PIC['content']}")
+
+    elif HACKERONE_RESPONSE.status_code == 404:
+
+        print(f"\n[{B} HACKERONE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
