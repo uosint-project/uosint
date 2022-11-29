@@ -1,4 +1,4 @@
-## List Of Supported Sites (57 Sites In Total!)
+## List Of Supported Sites (58 Sites In Total!)
 
 1. [FACEBOOK](https://www.facebook.com) ![](https://www.google.com/s2/favicons?domain=https://facebook.com/) 
 2. [Twitter](https://www.twitter.com) ![](https://www.google.com/s2/favicons?domain=https://twitter.com/)
