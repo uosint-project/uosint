@@ -3160,6 +3160,90 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
 
+    # [ HACKERRANK ]
+
+    HACKERRANK_url = f"https://www.hackerrank.com/rest/query_slug?slug={usernames}"
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    HACKERRANK_RESPONSE = requests.request("GET", HACKERRANK_url, headers=headers)
+
+    HACKERRANK_JSON = json.loads(HACKERRANK_RESPONSE.content)
+
+    if HACKERRANK_JSON['type'] == None:
+
+        print(f"\n[{B} HACKERRANK{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+
+    elif HACKERRANK_JSON['type'] == 'hacker':
+
+        print(f"\n[{B} HACKERRANK{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKERRANK_url}")
+
+        HACKERRANK_USER_URL = f"https://www.hackerrank.com/rest/contests/master/hackers/{usernames}/profile"
+
+        headers = {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+        }
+
+        HACKERRANK_USER_RESPONSE = requests.request("GET", HACKERRANK_USER_URL, headers=headers)
+
+        HACKERRANK_USER_JSON = json.loads(HACKERRANK_USER_RESPONSE.content)
+
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile ID {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('id')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Country {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('country')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User School {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('school')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Languages {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('languages')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Created AT {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('created_at')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Level {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('level')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Is Admin {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('is_admin')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Support Admin {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('support_admin')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Avatar {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('avatar')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Website {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('website')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Short Bio {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('short_bio')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User UserName Change Count {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('username_change_count')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('name')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Personal First Name {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('personal_first_name')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Personal Last Name {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('personal_last_name')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Company {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('company')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Local Language {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('local_language')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Has Avatar Url {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('has_avatar_url')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Hide Account Checklist {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('hide_account_checklist')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Spam {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('spam_user')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Job Title {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('job_title')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Jobs Headline {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('jobs_headline')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Linkedin Url {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('linkedin_url')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User GitHub Url {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('github_url')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Self {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('self')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Title {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('title')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Event Count {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('event_count')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Online {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('online')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Is Following {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('is_following')}")
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Is Followed {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('is_followed')}")
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Followers Count {Y}:{RS} {HACKERRANK_USER_JSON['model'].get('followers_count')}")
+
+    elif HACKERRANK_JSON['type'] == 'contest':
+
+        print(f"\n[{B} HACKERRANK{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKERRANK_url}")
+
+        print(
+            f"\n{' ' * 5}[{G} NOTE {RS}] [ {C}A Competition To Do Better Than Other People, Usually In Which Prizes Are Given{RS} ] \n")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
