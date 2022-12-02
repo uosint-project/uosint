@@ -28,7 +28,7 @@ def Username_input(usernames):
      {B}|  | {R}|  | [__  | |\ |  |  {RS}
      {B}|__| {R}|__| ___] | | \|  |  {RS}
 
-     Github {Y}:{RS} https://github.com/naimkowshik 
+     Github {Y}:{RS} https://github.com/uosint-project/uosint 
      {B}NOW {Y}:{RS} {Today_Date}  {B}Version {Y}:{C} 1{Y}.{C}0{RS}
      {B}Status {Y}:{RS} This Tool Is Still In Development Mode 〽️
     """)
