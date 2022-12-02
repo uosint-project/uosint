@@ -3244,6 +3244,42 @@ def Username_input(usernames):
         print(
             f"\n{' ' * 5}[{G} NOTE {RS}] [ {C}A Competition To Do Better Than Other People, Usually In Which Prizes Are Given{RS} ] \n")
 
+    # [ HASHNODE ]
+
+    HASHNODE_URL = f"https://hashnode.com/@{usernames}"
+
+    HASHNODE_RESPONSE = requests.request("GET", HASHNODE_URL)
+
+    if HASHNODE_RESPONSE.status_code == 200:
+
+        print(f"\n[{B} HASHNODE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HASHNODE_URL}")
+
+        HASHNODE_Soup = BeautifulSoup(HASHNODE_RESPONSE.text, "html.parser")
+
+        HASHNODE_NAME = HASHNODE_Soup.find('div', attrs={'class': 'css-ch6q0t'})
+
+        HASHNODE_BIO = HASHNODE_NAME.find('p', attrs={'class': 'css-pbihhq'})
+
+        if (not HASHNODE_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HASHNODE_NAME.find('h1').find('span', attrs={'itemprop': 'name'}).string}")
+
+        if (not HASHNODE_BIO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {HASHNODE_BIO.string}")
+
+    elif HASHNODE_RESPONSE.status_code == 404:
+
+        print(f"\n[{B} HASHNODE{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
