@@ -28,7 +28,7 @@
 <br>
 <span>🍊 <b>Features</b></span>
 
-<span>• 🔎 This can collect user information from **50+ Website** and more websites will be added in the future </span>
+<span>• 🔎 This can collect user information from **55+ Website** and more websites will be added in the future </span>
 
 <span>• 💫 If the user's profile is <b>Lock</b> or <b>Suspended</b> or <b>Private</b>, It will also be reported</span>
 
