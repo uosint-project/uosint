@@ -3280,6 +3280,94 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ HUBPAGES ]
+
+    HUBPAGES_URL = f"https://hubpages.com/@{usernames}"
+
+    HUBPAGES_RESPONSE = requests.request("GET", HUBPAGES_URL)
+
+    if HUBPAGES_RESPONSE.status_code == 200:
+
+        print(f"\n[{B} HUBPAGES{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HUBPAGES_URL}")
+
+        HASHNODE_Soup = BeautifulSoup(HUBPAGES_RESPONSE.text, "html.parser")
+
+        HASHNODE_NAME = HASHNODE_Soup.find('div', attrs={'class': 'bio_stats'}).find('span', attrs={
+            'class': 'author_primary_name'})
+
+        HASHNODE_JOINED = HASHNODE_Soup.find('div', attrs={'class': 'bio_stats'}).find('p', attrs={'class': 'meta'})
+
+        HASHNODE_BIO = HASHNODE_Soup.find('div', attrs={'class': 'content_section'}).find_all('p')
+
+        HASHNODE_ARTICLES = \
+        HASHNODE_Soup.find('div', attrs={'id': 'user_stats'}).find_all('div', attrs={'class': 'value'})[0]
+
+        HASHNODE_FOLLOWERS = \
+        HASHNODE_Soup.find('div', attrs={'id': 'user_stats'}).find_all('div', attrs={'class': 'value'})[1]
+
+        HASHNODE_FOLLOWING = \
+        HASHNODE_Soup.find('div', attrs={'id': 'user_stats'}).find_all('div', attrs={'class': 'value'})[2]
+
+        HASHNODE_PROFILE_PHOTO = HASHNODE_Soup.find('div', attrs={'class': 'user-pic-round'}).find('img')
+
+        if (not HASHNODE_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HASHNODE_NAME.string}")
+
+        if (not HASHNODE_ARTICLES):
+            print(f"{' ' * 5}└[{P}•{RS}] {C}User Articles Count {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{P}•{RS}] {C}User Articles Count {Y}:{RS} {HASHNODE_ARTICLES.string}")
+
+        if (not HASHNODE_FOLLOWERS):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {HASHNODE_FOLLOWERS.string}")
+
+        if (not HASHNODE_FOLLOWING):
+            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {HASHNODE_FOLLOWING.string}")
+
+        if (not HASHNODE_JOINED):
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Joined & Last Activity {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+            print(
+                f"{' ' * 5}└[{R}•{RS}] {C}User Joined & Last Activity {Y}:{RS} {HASHNODE_JOINED.text}")
+
+        if (not HASHNODE_BIO):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+
+            HUBPAGES_REMOVE_WORD = f"{HASHNODE_BIO}"
+            HUBPAGES_REMOVE_WORD_SEC = re.sub(r'</p>', "", HUBPAGES_REMOVE_WORD)
+            HUBPAGES_REMOVE_WORD_THR = re.sub(r'<p>', "", HUBPAGES_REMOVE_WORD_SEC)
+
+            print(
+                f"{' ' * 5}└[{B}•{RS}] {C}User Bio {Y}:{RS} {HUBPAGES_REMOVE_WORD_THR}")
+
+        if (not HASHNODE_PROFILE_PHOTO):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+        else:
+
+            HUBPAGES_IMG = HASHNODE_PROFILE_PHOTO
+            HUBPAGES_IMG_URL = HUBPAGES_IMG['data-original']
+            print(
+                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {HUBPAGES_IMG_URL}")
+
+    elif HUBPAGES_RESPONSE.status_code == 404:
+
+        print(f"\n[{B} HUBPAGES{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
