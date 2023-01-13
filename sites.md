@@ -1,4 +1,4 @@
-## List Of Supported Sites (59 Sites In Total!)
+## List Of Supported Sites (60 Sites In Total!)
 
 1. [FACEBOOK](https://www.facebook.com) ![](https://www.google.com/s2/favicons?domain=https://facebook.com/) 
 2. [Twitter](https://www.twitter.com) ![](https://www.google.com/s2/favicons?domain=https://twitter.com/)
@@ -59,3 +59,4 @@
 57. [HACKERONE](https://hackerone.com) ![](https://www.google.com/s2/favicons?domain=https://hackerone.com)
 58. [HACKER RANK](https://hackerrank.com/) ![](https://www.google.com/s2/favicons?domain=https://hackerrank.com/)
 59. [HASHNODE](https://hashnode.com/) ![](https://www.google.com/s2/favicons?domain=https://hashnode.com/)
+60. [HUBPAGES](https://hubpages.com/) ![](https://www.google.com/s2/favicons?domain=https://hubpages.com/)
