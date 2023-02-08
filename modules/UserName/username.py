@@ -3355,6 +3355,47 @@ def Username_input(usernames):
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
+    # [ IFTTT ]
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    IFTTT_URL = f"https://ifttt.com/p/{usernames}"
+
+    IFTTT_RESPONSE = requests.request("GET", IFTTT_URL, headers=headers)
+
+    if IFTTT_RESPONSE.status_code == 200:
+
+        print(f"\n[{B} IFTTT{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {IFTTT_URL}")
+
+        IFTTT_Soup = BeautifulSoup(IFTTT_RESPONSE.text, "html.parser")
+
+        IFTTT_NAME = IFTTT_Soup.find('div', attrs={'class': 'user-login'}).find('h1', attrs={'class': 'author'})
+
+        IFTTT_JOINED_DATE = IFTTT_Soup.find('section', attrs={'class': 'service-header'})
+
+        if (not IFTTT_NAME):
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❌ {RS}")
+        else:
+            Remove_Text_To_Space = IFTTT_NAME.getText()
+            Remove_Space_Text_Successful = Remove_Text_To_Space.strip()
+            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name  {Y}:{RS} {Remove_Space_Text_Successful}")
+
+        if (not IFTTT_JOINED_DATE):
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❌ {RS}")
+        else:
+            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Name  {Y}:{RS} {IFTTT_JOINED_DATE.find('p').string}")
+
+
+    elif IFTTT_RESPONSE.status_code == 404:
+
+        print(f"\n[{B} IFTTT{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
     # [ X VIDEOS ]
