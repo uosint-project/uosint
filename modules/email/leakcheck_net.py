@@ -1,5 +1,10 @@
-import json, requests
+import json
+import os
 from datetime import date
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 R = "\033[1;31m"
 B = "\033[1;34m"
@@ -10,6 +15,7 @@ W = "\033[1;37m"
 P = "\033[35m"
 C = '\033[36m'
 BL = '\033[1m'
+
 
 def leakcheck_email(email):
     today = date.today()
@@ -24,7 +30,7 @@ def leakcheck_email(email):
          {B}Status {Y}:{RS} This Tool Is Still In Development Mode 〽️
     """)
 
-    LEAKCHECK_API = "49535f49545f5245414c4c595f4150495f4b4559"
+    LEAKCHECK_API = os.getenv("LEAKCHECK_API")
 
     url = f"https://leakcheck.net/api/public?key={LEAKCHECK_API}&check={email}"
 
@@ -37,13 +43,17 @@ def leakcheck_email(email):
     leakcheck_json = json.loads(leakcheck_request.content)
 
     if leakcheck_json['success'] == True:
-        print(f" \n         [{B} Email {RS}]{Y}:{RS} {email} {C}[{R} BREACH {C}]{RS}")
+        print(
+            f" \n         [{B} Email {RS}]{Y}:{RS} {email} {C}[{R} BREACH {C}]{RS}")
         print(f"         [{B} Found {RS}]{Y}:{RS} {leakcheck_json['found']}")
-        print(f"         [{B} Passwords {RS}]{Y}:{RS} {leakcheck_json['passwords']}")
+        print(
+            f"         [{B} Passwords {RS}]{Y}:{RS} {leakcheck_json['passwords']}")
         print(f"         [{B} Sources {RS}]{RS}")
         for sources in leakcheck_json['sources']:
-            print(f"\n{' ' * 5}         └[{B} Name {RS}]{Y}:{RS} {sources['name']}")
-            print(f"{' ' * 5}         └[{B} Date {RS}]{Y}:{RS} {sources['date']} \n")
+            print(
+                f"\n{' ' * 5}         └[{B} Name {RS}]{Y}:{RS} {sources['name']}")
+            print(
+                f"{' ' * 5}         └[{B} Date {RS}]{Y}:{RS} {sources['date']} \n")
 
     elif leakcheck_json['success'] == False:
         print(f"         {B}Email{Y} :{RS} {email} {C}[{G} CLEAR {C}]{RS}\n")
