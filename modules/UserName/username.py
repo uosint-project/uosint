@@ -1,9 +1,11 @@
-import requests, time, json, os, urllib3
+import socket
+import requests, time, json, os, urllib3, shutil
 from requests.structures import CaseInsensitiveDict
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
-from datetime import date
+import cssutils
 import re
+from datetime import date
 
 #############################
 #    COLORING YOUR SHELL    #
@@ -33,2376 +35,3401 @@ def Username_input(usernames):
      {B}Status {Y}:{RS} This Tool Is Still In Development Mode 〽️
     """)
 
-    Facebook_Url = f"https://www.facebook.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('facebook.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.facebook.com", timeout=5)
+            if response.status_code == 200:
+                Facebook_Url = f"https://www.facebook.com/{usernames}"
 
-    Facebook_Request = requests.get(Facebook_Url)
+                Facebook_Request = requests.get(Facebook_Url)
 
-    if Facebook_Request.status_code == 200:
+                if Facebook_Request.status_code == 200:
 
+                    print(f"\n[{B} FACEBOOK{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}")
+
+                    Facebook_Soup = BeautifulSoup(Facebook_Request.text, "html.parser")
+
+                    full_name_tag = Facebook_Soup.find_all('title')
+
+                    for FULL_NAME in full_name_tag:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FULL_NAME.string}")
+
+                elif Facebook_Request.status_code == 404:
+                    print(f"[{B} FACEBOOK{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} FACEBOOK{RS} ]")
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} FACEBOOK{RS} ]")
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} FACEBOOK{RS} ]")
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Facebook_Url}")
-
-        Facebook_Soup = BeautifulSoup(Facebook_Request.text, "html.parser")
-
-        full_name_tag = Facebook_Soup.find_all('title')
-
-        for FULL_NAME in full_name_tag:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FULL_NAME.string}")
-
-
-    elif Facebook_Request.status_code == 404:
-        print(f"[{B} FACEBOOK{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ Twitter ]
 
-    Twitter_Url = f"https://nitter.net/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('nitter.net')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://nitter.net", timeout=5)
+            if response.status_code == 200:
+                Twitter_Url = f"https://nitter.net/{usernames}"
 
-    Twitter_Request = requests.request("GET", Twitter_Url)
+                Twitter_Request = requests.request("GET", Twitter_Url)
 
-    if Twitter_Request.status_code == 200:
+                if Twitter_Request.status_code == 200:
+                    print(f"\n[{B} TWITTER{RS} ]")
+
+                    Twitter_Soup = BeautifulSoup(Twitter_Request.text, "html.parser")
+
+                    full_name_tag = Twitter_Soup.find_all(class_="profile-card-fullname")
+                    username_tag = Twitter_Soup.find_all(class_="profile-card-username")
+                    User_Bio_tag = Twitter_Soup.find_all(class_="profile-bio")
+                    User_Joined_tag = Twitter_Soup.find_all(class_="profile-joindate")
+                    Tweets_Following_Followers_Likes_tag = Twitter_Soup.find_all(class_="profile-stat-num")
+                    User_Location = Twitter_Soup.find_all(class_="profile-location")
+                    User_Website_tag = Twitter_Soup.find_all(class_="profile-website")
+                    title = Twitter_Soup.find_all(span_="title")
+                    verified_twitter = Twitter_Soup.find_all(class_='icon-ok verified-icon')
+                    suspended_twitters = Twitter_Soup.find_all(class_='error-panel')
+
+                    if (not suspended_twitters):
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {f'https://twitter.com/{usernames}'}")
+
+                        if (not full_name_tag):
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name  {Y}:{RS} {full_name_tag[0].getText()}")
+
+                        if (not username_tag):
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {username_tag[0].getText()}")
+
+                        if (not User_Joined_tag):
+                            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {User_Joined_tag[0].getText()}")
+
+                        if (not Tweets_Following_Followers_Likes_tag):
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Tweets {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{R}•{RS}] {C}User Tweets {Y}:{RS} {Tweets_Following_Followers_Likes_tag[0].getText()}")
+
+                        if (not Tweets_Following_Followers_Likes_tag):
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{B}•{RS}] {C}User Following {Y}:{RS} {Tweets_Following_Followers_Likes_tag[1].getText()}")
+
+                        if (not Tweets_Following_Followers_Likes_tag):
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {Tweets_Following_Followers_Likes_tag[2].getText()}")
+
+                        if (not Tweets_Following_Followers_Likes_tag):
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Likes {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{Y}•{RS}] {C}User Likes {Y}:{RS} {Tweets_Following_Followers_Likes_tag[3].getText()}")
+
+                        if (not User_Bio_tag):
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❌ {RS}")
+                        else:
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {User_Bio_tag[0].getText()}")
+
+                            UserMention_Bio = User_Bio_tag[0].getText()
+
+                            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                            if (not Mention_Bio):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                            else:
+                                count = 0
+                                for Mention_Bios in Mention_Bio:
+                                    count += 1
+                                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                            UserEmail = User_Bio_tag[0].getText()
+
+                            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                            if (not emails):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                            else:
+                                count = 0
+                            for email in emails:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                            PhoneNumberbio = User_Bio_tag[0].getText()
+
+                            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                            if (not PhoneNumbers):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                            else:
+                                count = 0
+                            for PhoneNumber in PhoneNumbers:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Suspended {Y}:{RS} [ {G}LIVE{RS} ] {RS}")
+
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Suspended {Y}:{RS} {suspended_twitters[0].getText()}")
+
+
+                elif Twitter_Request.status_code == 404:
+                    print(f"\n[{B} TWITTER{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS}")
+            else:
+                print(f"\n[{B} TWITTER{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} TWITTER{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} TWITTER{RS} ]")
 
-        Twitter_Soup = BeautifulSoup(Twitter_Request.text, "html.parser")
-
-        full_name_tag = Twitter_Soup.find_all(class_="profile-card-fullname")
-        username_tag = Twitter_Soup.find_all(class_="profile-card-username")
-        User_Bio_tag = Twitter_Soup.find_all(class_="profile-bio")
-        User_Joined_tag = Twitter_Soup.find_all(class_="profile-joindate")
-        Tweets_Following_Followers_Likes_tag = Twitter_Soup.find_all(class_="profile-stat-num")
-        User_Location = Twitter_Soup.find_all(class_="profile-location")
-        User_Website_tag = Twitter_Soup.find_all(class_="profile-website")
-        title = Twitter_Soup.find_all(span_="title")
-        verified_twitter = Twitter_Soup.find_all(class_='icon-ok verified-icon')
-        suspended_twitters = Twitter_Soup.find_all(class_='error-panel')
-
-        if (not suspended_twitters):
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {f'https://twitter.com/{usernames}'}")
-
-            if (not full_name_tag):
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name  {Y}:{RS} {full_name_tag[0].getText()}")
-
-            if (not username_tag):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {username_tag[0].getText()}")
-
-            if (not User_Joined_tag):
-                print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {User_Joined_tag[0].getText()}")
-
-            if (not Tweets_Following_Followers_Likes_tag):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Tweets {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(
-                    f"{' ' * 5}└[{R}•{RS}] {C}User Tweets {Y}:{RS} {Tweets_Following_Followers_Likes_tag[0].getText()}")
-
-            if (not Tweets_Following_Followers_Likes_tag):
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(
-                    f"{' ' * 5}└[{B}•{RS}] {C}User Following {Y}:{RS} {Tweets_Following_Followers_Likes_tag[1].getText()}")
-
-            if (not Tweets_Following_Followers_Likes_tag):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(
-                    f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {Tweets_Following_Followers_Likes_tag[2].getText()}")
-
-            if (not Tweets_Following_Followers_Likes_tag):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Likes {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(
-                    f"{' ' * 5}└[{Y}•{RS}] {C}User Likes {Y}:{RS} {Tweets_Following_Followers_Likes_tag[3].getText()}")
-
-            if (not User_Bio_tag):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❌ {RS}")
-            else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {User_Bio_tag[0].getText()}")
-
-                UserMention_Bio = User_Bio_tag[0].getText()
-
-                Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-                if (not Mention_Bio):
-                    print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-                else:
-                    count = 0
-                    for Mention_Bios in Mention_Bio:
-                        count += 1
-                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-                UserEmail = User_Bio_tag[0].getText()
-
-                emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-                print(f"{' ' * 5}└[{G}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-                if (not emails):
-                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-                else:
-                    count = 0
-                for email in emails:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-                print(f"{' ' * 5}└[{R}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-                PhoneNumberbio = User_Bio_tag[0].getText()
-
-                PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-                if (not PhoneNumbers):
-                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-                else:
-                    count = 0
-                for PhoneNumber in PhoneNumbers:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Suspended {Y}:{RS} [ {G}LIVE{RS} ] {RS}")
-
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Suspended {Y}:{RS} {suspended_twitters[0].getText()}")
-
-
-    elif Twitter_Request.status_code == 404:
-        print(f"\n[{B} TWITTER{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ YouTube ]
 
-    YouTube_Url = f"https://www.youtube.com/user/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('youtube.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.youtube.com", timeout=5)
+            if response.status_code == 200:
+                YouTube_Url = f"https://www.youtube.com/user/{usernames}"
 
-    YouTube_Request = requests.request("GET", YouTube_Url)
+                YouTube_Request = requests.request("GET", YouTube_Url)
 
-    if YouTube_Request.status_code == 200:
+                if YouTube_Request.status_code == 200:
+                    print(f"\n[{B} YouTube{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {YouTube_Url}")
+
+                    YouTube_Soup = BeautifulSoup(YouTube_Request.text, "html.parser")
+
+                    full_name_YouTube_tag = YouTube_Soup.find_all("title")
+
+                    if (not full_name_YouTube_tag):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Name {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Name {Y}:{RS} {full_name_YouTube_tag[0].getText()}")
+
+                elif YouTube_Request.status_code == 404:
+                    print(f"\n[{B} YouTube{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} YouTube{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} YouTube{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} YouTube{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {YouTube_Url}")
 
-        YouTube_Soup = BeautifulSoup(YouTube_Request.text, "html.parser")
-
-        full_name_YouTube_tag = YouTube_Soup.find_all("title")
-
-        if (not full_name_YouTube_tag):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Name {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Name {Y}:{RS} {full_name_YouTube_tag[0].getText()}")
-
-    elif YouTube_Request.status_code == 404:
-        print(f"\n[{B} YouTube{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ VIMEO ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('vimeo.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://vimeo.com", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    VIMEO_Url = f"https://vimeo.com/{usernames}"
+                VIMEO_Url = f"https://vimeo.com/{usernames}"
 
-    VIMEO_Request = requests.get(VIMEO_Url, headers=headers)
+                VIMEO_Request = requests.get(VIMEO_Url, headers=headers)
 
-    if VIMEO_Request.status_code == 200:
+                if VIMEO_Request.status_code == 200:
+                    print(f"\n[{B} VIMEO{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {VIMEO_Url}")
+
+                    VIMEO_Url = f"https://vimeo.com/{usernames}/collections"
+
+                    VIMEO_Requestss = requests.get(VIMEO_Url, headers=headers)
+
+                    VIMEO_Soupssss = BeautifulSoup(VIMEO_Requestss.text, "html.parser")
+
+                    all = VIMEO_Soupssss.find_all('p', class_="super_link_list_title")
+
+                    VIMEO_SOups = BeautifulSoup(VIMEO_Request.text, "html.parser")
+
+                    VIMEO_Url = f"https://vimeo.com/{usernames}/following/followers/sort:date"
+
+                    VIMEO_Requests = requests.get(VIMEO_Url, headers=headers)
+
+                    VIMEO_Soups = BeautifulSoup(VIMEO_Requests.text, "html.parser")
+
+                    Following_Followers = VIMEO_Soups.find_all('div', class_="js-tabs tab_bar")
+
+                    Following_Followers = Following_Followers[0].getText()
+                    Following_Followers_result = Following_Followers.strip()
+
+                    VIMEO_Soup = BeautifulSoup(VIMEO_Request.text, "html.parser")
+
+                    name_PERISCOPE = VIMEO_Soup.find('meta', property="og:title")
+
+                    Description_PERISCOPE = VIMEO_Soup.find('meta', property="og:description")
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_PERISCOPE['content']}")
+                    print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {Description_PERISCOPE['content']}")
+
+                    UserMention_Bio = Description_PERISCOPE['content']
+
+                    Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Description{Y}:{RS}")
+
+                    if (not Mention_Bio):
+                        print(
+                            f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                    else:
+                        count = 0
+                        for Mention_Bios in Mention_Bio:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                    UserEmail = Description_PERISCOPE['content']
+
+                    emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Description{Y}:{RS}")
+
+                    if (not emails):
+                        print(
+                            f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                    else:
+                        count = 0
+                    for email in emails:
+                        count += 1
+                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Description{Y}:{RS}")
+
+                    PhoneNumberbio = Description_PERISCOPE['content']
+
+                    PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                    if (not PhoneNumbers):
+                        print(
+                            f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        count = 0
+                    for PhoneNumber in PhoneNumbers:
+                        count += 1
+                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                if VIMEO_Request.status_code == 404:
+                    print(f"\n[{B} VIMEO{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} VIMEO{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} VIMEO{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} VIMEO{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {VIMEO_Url}")
-
-        VIMEO_Url = f"https://vimeo.com/{usernames}/collections"
-
-        VIMEO_Requestss = requests.get(VIMEO_Url, headers=headers)
-
-        VIMEO_Soupssss = BeautifulSoup(VIMEO_Requestss.text, "html.parser")
-
-        all = VIMEO_Soupssss.find_all('p', class_="super_link_list_title")
-
-        VIMEO_SOups = BeautifulSoup(VIMEO_Request.text, "html.parser")
-
-        VIMEO_Url = f"https://vimeo.com/{usernames}/following/followers/sort:date"
-
-        VIMEO_Requests = requests.get(VIMEO_Url, headers=headers)
-
-        VIMEO_Soups = BeautifulSoup(VIMEO_Requests.text, "html.parser")
-
-        Following_Followers = VIMEO_Soups.find_all('div', class_="js-tabs tab_bar")
-
-        Following_Followers = Following_Followers[0].getText()
-        Following_Followers_result = Following_Followers.strip()
-
-        VIMEO_Soup = BeautifulSoup(VIMEO_Request.text, "html.parser")
-
-        name_PERISCOPE = VIMEO_Soup.find('meta', property="og:title")
-
-        Description_PERISCOPE = VIMEO_Soup.find('meta', property="og:description")
-
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_PERISCOPE['content']}")
-        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {Description_PERISCOPE['content']}")
-
-        UserMention_Bio = Description_PERISCOPE['content']
-
-        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Description{Y}:{RS}")
-
-        if (not Mention_Bio):
-            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
-        else:
-            count = 0
-            for Mention_Bios in Mention_Bio:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-        UserEmail = Description_PERISCOPE['content']
-
-        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Description{Y}:{RS}")
-
-        if (not emails):
-            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} \n")
-        else:
-            count = 0
-        for email in emails:
-            count += 1
-            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Description{Y}:{RS}")
-
-        PhoneNumberbio = Description_PERISCOPE['content']
-
-        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-        if (not PhoneNumbers):
-            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Description {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            count = 0
-        for PhoneNumber in PhoneNumbers:
-            count += 1
-            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-    if VIMEO_Request.status_code == 404:
-        print(f"\n[{B} VIMEO{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ Caffeine_TV ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname(f'api.caffeine.tv')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get(f"https://api.caffeine.tv/v1/users/{usernames}", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    url = f"https://api.caffeine.tv/v1/users/{usernames}"
+                url = f"https://api.caffeine.tv/v1/users/{usernames}"
 
-    Caffeine_TV_Request = requests.request("GET", url, headers=headers)
+                Caffeine_TV_Request = requests.request("GET", url, headers=headers)
 
-    if Caffeine_TV_Request.status_code == 200:
-        Caffeine_TV_Data = json.loads(Caffeine_TV_Request.content)
+                if Caffeine_TV_Request.status_code == 200:
+                    Caffeine_TV_Data = json.loads(Caffeine_TV_Request.content)
+                    print(f"\n[{B} CAFFEINE_TV{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {f'https://www.caffeine.tv/{usernames}/profile'}")
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {Caffeine_TV_Data['user']['name']}")
+                    print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {Caffeine_TV_Data['user']['username']}")
+                    print(
+                        f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {Caffeine_TV_Data['user']['following_count']}")
+                    print(
+                        f"{' ' * 5}└[{R}•{RS}] {C}User Followers {Y}:{RS} {Caffeine_TV_Data['user']['followers_count']}")
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Badge {Y}:{RS} {Caffeine_TV_Data['user']['badge']}")
+
+                elif Caffeine_TV_Request.status_code == 404:
+                    print(f"\n[{B} CAFFEINE_TV{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} CAFFEINE_TV{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} CAFFEINE_TV{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} CAFFEINE_TV{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {f'https://www.caffeine.tv/{usernames}/profile'}")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {Caffeine_TV_Data['user']['name']}")
-        print(f"{' ' * 5}└[{Y}•{RS}] {C}UserName {Y}:{RS} {Caffeine_TV_Data['user']['username']}")
-        print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {Caffeine_TV_Data['user']['following_count']}")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Followers {Y}:{RS} {Caffeine_TV_Data['user']['followers_count']}")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Badge {Y}:{RS} {Caffeine_TV_Data['user']['badge']}")
 
-    elif Caffeine_TV_Request.status_code == 404:
-        print(f"\n[{B} CAFFEINE_TV{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ GITHUB ]
 
-    Github_Url = f"https://github.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('github.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://github.com", timeout=5)
+            if response.status_code == 200:
+                Github_Url = f"https://github.com/{usernames}"
 
-    Github_Request = requests.get(Github_Url)
+                Github_Request = requests.get(Github_Url)
 
-    if Github_Request.status_code == 200:
+                if Github_Request.status_code == 200:
 
+                    print(f"\n[{B} GITHUB{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Github_Url}")
+
+                    Github_Soup = BeautifulSoup(Github_Request.text, "html.parser")
+
+                    full_name_Github_tag = Github_Soup.find_all(class_="p-name vcard-fullname d-block overflow-hidden")
+                    user_name_Github_tag = Github_Soup.find_all(class_="p-nickname vcard-username d-block")
+                    user_bio_Github_tag = Github_Soup.find_all(
+                        class_="p-note user-profile-bio mb-3 js-user-profile-bio f4")
+                    user_followers_Github_tag = Github_Soup.find_all(class_="text-bold color-fg-default")
+                    user_workfrom_organization_Github_tag = Github_Soup.find_all(class_="p-org")
+                    user_location_Github_tag = Github_Soup.find_all(class_="p-label")
+
+                    # USer Full Name
+                    if (not full_name_Github_tag):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = full_name_Github_tag[0].getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    # User Followers
+                    if (not user_followers_Github_tag):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = user_followers_Github_tag[0].getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    # User location
+                    if (not user_location_Github_tag):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = user_location_Github_tag[0].getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    # User Working From
+                    if (not user_workfrom_organization_Github_tag):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = user_workfrom_organization_Github_tag[0].getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    # User BIO
+                    if (not user_bio_Github_tag):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = user_bio_Github_tag[0].getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                        UserMention_Bio = name_THERMI_SPACE_REMOVE_RESULT
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = name_THERMI_SPACE_REMOVE_RESULT
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = name_THERMI_SPACE_REMOVE_RESULT
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+
+                elif Github_Request.status_code == 404:
+                    print(f"\n[{B} GITHUB{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} GITHUB{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} GITHUB{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} GITHUB{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Github_Url}")
-
-        Github_Soup = BeautifulSoup(Github_Request.text, "html.parser")
-
-        full_name_Github_tag = Github_Soup.find_all(class_="p-name vcard-fullname d-block overflow-hidden")
-        user_name_Github_tag = Github_Soup.find_all(class_="p-nickname vcard-username d-block")
-        user_bio_Github_tag = Github_Soup.find_all(class_="p-note user-profile-bio mb-3 js-user-profile-bio f4")
-        user_followers_Github_tag = Github_Soup.find_all(class_="text-bold color-fg-default")
-        user_workfrom_organization_Github_tag = Github_Soup.find_all(class_="p-org")
-        user_location_Github_tag = Github_Soup.find_all(class_="p-label")
-
-        # USer Full Name
-        if (not full_name_Github_tag):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = full_name_Github_tag[0].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User FullName {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        # User Followers
-        if (not user_followers_Github_tag):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = user_followers_Github_tag[0].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        # User location
-        if (not user_location_Github_tag):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = user_location_Github_tag[0].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        # User Working From
-        if (not user_workfrom_organization_Github_tag):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = user_workfrom_organization_Github_tag[0].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Work Organization {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        # User BIO
-        if (not user_bio_Github_tag):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = user_bio_Github_tag[0].getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-            UserMention_Bio = name_THERMI_SPACE_REMOVE_RESULT
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = name_THERMI_SPACE_REMOVE_RESULT
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = name_THERMI_SPACE_REMOVE_RESULT
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-
-    elif Github_Request.status_code == 404:
-        print(f"\n[{B} GITHUB{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ replit ]
 
-    replit_Url = f"https://replit.com/@{usernames}"
+    try:
+        ip_address = socket.gethostbyname('replit.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://replit.com", timeout=5)
+            if response.status_code == 200:
+                replit_Url = f"https://replit.com/@{usernames}"
 
-    Replit_Request = requests.request("GET", replit_Url)
+                Replit_Request = requests.request("GET", replit_Url)
 
-    if Replit_Request.status_code == 200:
+                if Replit_Request.status_code == 200:
+                    print(f"\n[{B} REPLIT{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {replit_Url}")
+                    Replit_Soup = BeautifulSoup(Replit_Request.text, "html.parser")
+                    full_name_Replit_tag = Replit_Soup.find_all("title")
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {full_name_Replit_tag[0].getText()}")
+
+                elif Replit_Request.status_code == 404:
+                    print(f"\n[{B} REPLIT{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} REPLIT{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} REPLIT{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} REPLIT{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {replit_Url}")
-        Replit_Soup = BeautifulSoup(Replit_Request.text, "html.parser")
-        full_name_Replit_tag = Replit_Soup.find_all("title")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {full_name_Replit_tag[0].getText()}")
 
-    elif Replit_Request.status_code == 404:
-        print(f"\n[{B} REPLIT{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ Talegram ]
 
-    Telegram_Bot_Url = f"https://t.me/{usernames}_bot"
+    try:
+        ip_address = socket.gethostbyname('t.me')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://t.me", timeout=5)
+            if response.status_code == 200:
+                Telegram_Bot_Url = f"https://t.me/{usernames}_bot"
 
-    Telegram_Request = requests.get(Telegram_Bot_Url)
+                Telegram_Request = requests.get(Telegram_Bot_Url)
 
-    if Telegram_Request.status_code == 200:
+                if Telegram_Request.status_code == 200:
 
-        print(f"\n[{B} TELEGRAM{RS} ]")
+                    print(f"\n[{B} TELEGRAM{RS} ]")
 
-        print(f"{' ' * 5}└[{G} BOT {RS}]")
+                    print(f"{' ' * 5}└[{G} BOT {RS}]")
 
-        print(f"{' ' * 8}└[{R}•{RS}]{C}User Url {Y}:{RS} {Telegram_Bot_Url}")
+                    print(f"{' ' * 8}└[{R}•{RS}]{C}User Url {Y}:{RS} {Telegram_Bot_Url}")
 
-        Telegram_Soup = BeautifulSoup(Telegram_Request.text, "html.parser")
+                    Telegram_Soup = BeautifulSoup(Telegram_Request.text, "html.parser")
 
-        BOT_full_name_tag = Telegram_Soup.find_all('span', attrs={'dir': 'auto'})
+                    BOT_full_name_tag = Telegram_Soup.find_all('span', attrs={'dir': 'auto'})
 
-        for FULL_NAME in BOT_full_name_tag:
-            print(f"{' ' * 8}└[{B}•{RS}] {C}BOT Name {Y}:{RS} {FULL_NAME.string}")
-        full_name_tag = Telegram_Soup.find_all(class_="tgme_page_description")
-        if (full_name_tag):
-            def remove(string):
-                return string.replace("""
-      """, "")
+                    for FULL_NAME in BOT_full_name_tag:
+                        print(f"{' ' * 8}└[{B}•{RS}] {C}BOT Name {Y}:{RS} {FULL_NAME.string}")
+                    full_name_tag = Telegram_Soup.find_all(class_="tgme_page_description")
+                    if (full_name_tag):
+                        def remove(string):
+                            return string.replace("""
+                  """, "")
 
-            string = full_name_tag[0].getText()
-            print(f"{' ' * 8}└[{Y}•{RS}] {C}User Description {Y}:{RS} {remove(string)}")
-            print(
-                f"{' ' * 5}[{G} NOTE {RS}] [ {C}USER DESCRIPTION{RS} {Y}MEANS {G}NOT SURE THIS USER {R}EXISTS{RS} OR {R}NOT{RS} ] \n")
+                        string = full_name_tag[0].getText()
+                        print(f"{' ' * 8}└[{Y}•{RS}] {C}User Description {Y}:{RS} {remove(string)}")
+                        print(
+                            f"{' ' * 5}[{G} NOTE {RS}] [ {C}USER DESCRIPTION{RS} {Y}MEANS {G}NOT SURE THIS USER {R}EXISTS{RS} OR {R}NOT{RS} ] \n")
 
-    elif Telegram_Request.status_code == 404:
-        print(f"\n└── {B}Telegram {R}✖{RS}")
-        print(f"{' ' * 5}├──{C}User Url {Y}:{RS} {R}Not Found ❗️{RS}")
+                elif Telegram_Request.status_code == 404:
+                    print(f"\n└── {B}Telegram {R}✖{RS}")
+                    print(f"{' ' * 5}├──{C}User Url {Y}:{RS} {R}Not Found ❗️{RS}")
 
-    Telegram_USER_Url = f"https://t.me/{usernames}"
+                Telegram_USER_Url = f"https://t.me/{usernames}"
 
-    Telegram_Request = requests.get(Telegram_USER_Url)
+                Telegram_Request = requests.get(Telegram_USER_Url)
 
-    print(f"{' ' * 5}└[{G} USER {RS}/{G} GROUP {RS}/{G} PAGE {RS}]")
+                print(f"{' ' * 5}└[{G} USER {RS}/{G} GROUP {RS}/{G} PAGE {RS}]")
 
-    if Telegram_Request.status_code == 200:
+                if Telegram_Request.status_code == 200:
 
-        print(f"{' ' * 10}└[{R}•{RS}] {C}User Url {Y}:{RS} {Telegram_USER_Url}")
+                    print(f"{' ' * 10}└[{R}•{RS}] {C}User Url {Y}:{RS} {Telegram_USER_Url}")
 
-        Telegram_Soup = BeautifulSoup(Telegram_Request.text, "html.parser")
+                    Telegram_Soup = BeautifulSoup(Telegram_Request.text, "html.parser")
 
-        user_full_name_tag_talegram = Telegram_Soup.find_all('span', attrs={'dir': 'auto'})
-        full_name_tag_talegram = Telegram_Soup.find_all(class_="tgme_page_description")
-        Group_member_and_online_talegram = Telegram_Soup.find_all(class_="tgme_page_extra")
+                    user_full_name_tag_talegram = Telegram_Soup.find_all('span', attrs={'dir': 'auto'})
+                    full_name_tag_talegram = Telegram_Soup.find_all(class_="tgme_page_description")
+                    Group_member_and_online_talegram = Telegram_Soup.find_all(class_="tgme_page_extra")
 
-        if (full_name_tag_talegram):
-            def remove(string):
-                return string.replace("""
-      """, "")
+                    if (full_name_tag_talegram):
+                        def remove(string):
+                            return string.replace("""
+                  """, "")
 
-            string = full_name_tag_talegram[0].getText()
-            print(f"{' ' * 10}└[{B}•{RS}] {C}User Description {Y}:{RS} {remove(string)}")
+                        string = full_name_tag_talegram[0].getText()
+                        print(f"{' ' * 10}└[{B}•{RS}] {C}User Description {Y}:{RS} {remove(string)}")
 
-        for FULL_NAME in user_full_name_tag_talegram:
-            print(f"{' ' * 10}└[{Y}•{RS}] {C}User Profile{RS}/{C}Group{RS}/{C}Page Name {Y}:{RS} {FULL_NAME.string}")
+                    for FULL_NAME in user_full_name_tag_talegram:
+                        print(
+                            f"{' ' * 10}└[{Y}•{RS}] {C}User Profile{RS}/{C}Group{RS}/{C}Page Name {Y}:{RS} {FULL_NAME.string}")
 
-        if (not Group_member_and_online_talegram):
-            print(f"{' ' * 10}└[{G}•{RS}] {C}Group Members & Online {Y}:{RS} {R}Not Found ❌ {RS}")
-        else:
-            def remove(string):
-                return string.replace("""
-      """, " ")
+                    if (not Group_member_and_online_talegram):
+                        print(f"{' ' * 10}└[{G}•{RS}] {C}Group Members & Online {Y}:{RS} {R}Not Found ❌ {RS}")
+                    else:
+                        def remove(string):
+                            return string.replace("""
+                  """, " ")
 
-            string = Group_member_and_online_talegram[0].getText()
-            print(
-                f"{' ' * 10}└[{R}•{RS}] {C}Group Members & Online{RS}/{C}Username{RS}/{C}Subscribers{Y}:{RS} {remove(string)}")
+                        string = Group_member_and_online_talegram[0].getText()
+                        print(
+                            f"{' ' * 10}└[{R}•{RS}] {C}Group Members & Online{RS}/{C}Username{RS}/{C}Subscribers{Y}:{RS} {remove(string)}")
 
-    elif Telegram_Request.status_code == 404:
-        print(f"\n└── {B}Telegram {R}✖{RS}")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {R}Not Found ❗️{RS}")
+                elif Telegram_Request.status_code == 404:
+                    print(f"\n└── {B}Telegram {R}✖{RS}")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {R}Not Found ❗️{RS}")
+
+            else:
+                print(f"\n[{B} Telegram{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} Telegram{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
+        print(f"\n[{B} Telegram{RS} ]")
+
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ TINDER ]
 
-    Tinder_Url = f"https://tinder.com/@{usernames}"
+    try:
+        ip_address = socket.gethostbyname('tinder.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://tinder.com", timeout=5)
+            if response.status_code == 200:
+                Tinder_Url = f"https://tinder.com/@{usernames}"
 
-    Tinder_Request = requests.get(Tinder_Url)
+                Tinder_Request = requests.get(Tinder_Url)
 
-    if Tinder_Request.status_code == 200:
+                if Tinder_Request.status_code == 200:
 
+                    print(f"\n[{B} TINDER{RS} ]")
+
+                    Tinder_Soup = BeautifulSoup(Tinder_Request.text, "html.parser")
+
+                    Tinder_title = Tinder_Soup.find("meta", property='profile:first_name')
+                    Tinder_Image = Tinder_Soup.find("meta", property="og:image")
+
+                    if Tinder_title:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Tinder_Url}")
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {Tinder_title['content']}")
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {Tinder_Image['content']}")
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} TINDER{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} TINDER{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} TINDER{RS} ]")
 
-        Tinder_Soup = BeautifulSoup(Tinder_Request.text, "html.parser")
-
-        Tinder_title = Tinder_Soup.find("meta", property='profile:first_name')
-        Tinder_Image = Tinder_Soup.find("meta", property="og:image")
-
-        if Tinder_title:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {Tinder_Url}")
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {Tinder_title['content']}")
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {Tinder_Image['content']}")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ SOUNDCLOUD ]
 
-    SOUNDCLOUD_Url = f"https://soundcloud.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('soundcloud.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://soundcloud.com", timeout=5)
+            if response.status_code == 200:
+                SOUNDCLOUD_Url = f"https://soundcloud.com/{usernames}"
 
-    SOUNDCLOUD_Request = requests.get(SOUNDCLOUD_Url)
+                SOUNDCLOUD_Request = requests.get(SOUNDCLOUD_Url)
 
-    if SOUNDCLOUD_Request.status_code == 200:
+                if SOUNDCLOUD_Request.status_code == 200:
+                    print(f"\n[{B} SOUNDCLOUD{RS} ]")
+
+                    SOUNDCLOUD_Soup = BeautifulSoup(SOUNDCLOUD_Request.text, "html.parser")
+
+                    SOUNDCLOUD_title = SOUNDCLOUD_Soup.find("meta", property='og:title')
+                    SOUNDCLOUD_FOLLOWER = SOUNDCLOUD_Soup.find("meta", property='soundcloud:follower_count')
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {SOUNDCLOUD_Url}")
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SOUNDCLOUD_title['content']}")
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Follower {Y}:{RS} {SOUNDCLOUD_FOLLOWER['content']}")
+
+                if SOUNDCLOUD_Request.status_code == 404:
+                    print(f"\n[{B} SOUNDCLOUD{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS}")
+
+            else:
+                print(f"\n[{B} SOUNDCLOUD{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} SOUNDCLOUD{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} SOUNDCLOUD{RS} ]")
 
-        SOUNDCLOUD_Soup = BeautifulSoup(SOUNDCLOUD_Request.text, "html.parser")
-
-        SOUNDCLOUD_title = SOUNDCLOUD_Soup.find("meta", property='og:title')
-        SOUNDCLOUD_FOLLOWER = SOUNDCLOUD_Soup.find("meta", property='soundcloud:follower_count')
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {SOUNDCLOUD_Url}")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SOUNDCLOUD_title['content']}")
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Follower {Y}:{RS} {SOUNDCLOUD_FOLLOWER['content']}")
-
-    if SOUNDCLOUD_Request.status_code == 404:
-        print(f"\n[{B} SOUNDCLOUD{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ STEAM ]
 
-    STEAM_Url = f"https://steamcommunity.com/id/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('steamcommunity.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://steamcommunity.com", timeout=5)
+            if response.status_code == 200:
+                STEAM_Url = f"https://steamcommunity.com/id/{usernames}"
 
-    STEAM_Request = requests.get(STEAM_Url)
+                STEAM_Request = requests.get(STEAM_Url)
 
-    if STEAM_Request.status_code == 200:
+                if STEAM_Request.status_code == 200:
 
+                    print(f"\n[{B} STEAM{RS} ]")
+
+                    STEAM_Soup = BeautifulSoup(STEAM_Request.text, "html.parser")
+
+                    STEAM_name = STEAM_Soup.find_all('span', attrs={'class': 'actual_persona_name'})
+
+                    STEAM_specified_profile_could_not_be_found = STEAM_Soup.find_all('div', id="message")
+
+                    profile_private_info = STEAM_Soup.find_all('div', class_="profile_private_info")
+
+                    STEAM_friend_PlayerLevel = STEAM_Soup.find_all('span', attrs={'class': 'friendPlayerLevelNum'})
+
+                    NOT_FOUND = STEAM_Soup.find_all('p', class_='sectionText')
+
+                    if (not profile_private_info):
+                        if (not NOT_FOUND):
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {STEAM_Url}")
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Player Name {Y}:{RS} {STEAM_name[0].getText()}")
+                            print(
+                                f"{' ' * 5}└[{Y}•{RS}] {C}User Player LevelNum {Y}:{RS} {STEAM_friend_PlayerLevel[0].getText()}")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+                    else:
+                        def remove(string):
+                            return string.replace("""
+                															""", "        ")
+
+                        string = profile_private_info[0].getText()
+                        str = remove(string)
+                        new_str = str.strip()
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Private {Y}:{RS} {new_str}")
+
+            else:
+                print(f"\n[{B} STEAM{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} STEAM{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} STEAM{RS} ]")
 
-        STEAM_Soup = BeautifulSoup(STEAM_Request.text, "html.parser")
-
-        STEAM_name = STEAM_Soup.find_all('span', attrs={'class': 'actual_persona_name'})
-
-        STEAM_specified_profile_could_not_be_found = STEAM_Soup.find_all('div', id="message")
-
-        profile_private_info = STEAM_Soup.find_all('div', class_="profile_private_info")
-
-        STEAM_friend_PlayerLevel = STEAM_Soup.find_all('span', attrs={'class': 'friendPlayerLevelNum'})
-
-        NOT_FOUND = STEAM_Soup.find_all('p', class_='sectionText')
-
-        if (not profile_private_info):
-            if (not NOT_FOUND):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {STEAM_Url}")
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Player Name {Y}:{RS} {STEAM_name[0].getText()}")
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player LevelNum {Y}:{RS} {STEAM_friend_PlayerLevel[0].getText()}")
-            else:
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
-        else:
-            def remove(string):
-                return string.replace("""
-    															""", "        ")
-
-            string = profile_private_info[0].getText()
-            str = remove(string)
-            new_str = str.strip()
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Private {Y}:{RS} {new_str}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ LINKTR ]
 
-    LINKTR_Url = f"https://linktr.ee/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('linktr.ee')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://linktr.ee", timeout=5)
+            if response.status_code == 200:
+                LINKTR_Url = f"https://linktr.ee/{usernames}"
 
-    LINKTR_Request = requests.get(LINKTR_Url)
+                LINKTR_Request = requests.get(LINKTR_Url)
 
-    if LINKTR_Request.status_code == 200:
+                if LINKTR_Request.status_code == 200:
 
+                    print(f"\n[{B} LINKTR{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {LINKTR_Url}")
+
+                    LINKTR_Soup = BeautifulSoup(LINKTR_Request.text, "html.parser")
+
+                    LINKTR_title2 = LINKTR_Soup.find('span', attrs={
+                        'class': 'UserDetailsCard_title__trfvf UserDetailsCard_oneLineTruncation__uhOF5'})
+
+                    NOT_verified = LINKTR_Soup.find('div', class_="sc-bdfBwQ dnZXm")
+
+                    profile_name = LINKTR_Soup.find('div', class_="sc-bdfBwQ Header__Grid-sc-i98650-0 llgrqs jvyDlw")
+
+                    profile_description = LINKTR_Soup.find('div', class_="sc-bdfBwQ hTuoxC")
+
+                    profile_image = LINKTR_Soup.find('meta', property='og:image')
+
+                    if (not NOT_verified):
+                        if (not profile_name):
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {profile_name.string}")
+
+                        if (not profile_description):
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {profile_description.string}")
+
+                            UserMention_Bio = profile_description.string
+
+                            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                            if (not Mention_Bio):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                            else:
+                                count = 0
+                                for Mention_Bios in Mention_Bio:
+                                    count += 1
+                                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                            UserEmail = profile_description.string
+
+                            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                            if (not emails):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                            else:
+                                count = 0
+                            for email in emails:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                            PhoneNumberbio = profile_description.string
+
+                            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                            if (not PhoneNumbers):
+                                print(
+                                    f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                            else:
+                                count = 0
+                            for PhoneNumber in PhoneNumbers:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                        if (not profile_image):
+                            print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {profile_image['content']}")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Image {Y}:{RS} {NOT_verified.string}")
+
+                if LINKTR_Request.status_code == 404:
+                    print(f"\n[{B} LINKTR{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} LINKTR{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} LINKTR{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} LINKTR{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {LINKTR_Url}")
-
-        LINKTR_Soup = BeautifulSoup(LINKTR_Request.text, "html.parser")
-
-        LINKTR_title2 = LINKTR_Soup.find('span', attrs={
-            'class': 'UserDetailsCard_title__trfvf UserDetailsCard_oneLineTruncation__uhOF5'})
-
-        NOT_verified = LINKTR_Soup.find('div', class_="sc-bdfBwQ dnZXm")
-
-        profile_name = LINKTR_Soup.find('div', class_="sc-bdfBwQ Header__Grid-sc-i98650-0 llgrqs jvyDlw")
-
-        profile_description = LINKTR_Soup.find('div', class_="sc-bdfBwQ hTuoxC")
-
-        profile_image = LINKTR_Soup.find('meta', property='og:image')
-
-        if (not NOT_verified):
-            if (not profile_name):
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {profile_name.string}")
-
-            if (not profile_description):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {profile_description.string}")
-
-                UserMention_Bio = profile_description.string
-
-                Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-                print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-                if (not Mention_Bio):
-                    print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-                else:
-                    count = 0
-                    for Mention_Bios in Mention_Bio:
-                        count += 1
-                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-                UserEmail = profile_description.string
-
-                emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-                print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-                if (not emails):
-                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-                else:
-                    count = 0
-                for email in emails:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-                print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-                PhoneNumberbio = profile_description.string
-
-                PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-                if (not PhoneNumbers):
-                    print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-                else:
-                    count = 0
-                for PhoneNumber in PhoneNumbers:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-            if (not profile_image):
-                print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {profile_image['content']}")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Image {Y}:{RS} {NOT_verified.string}")
-
-    if LINKTR_Request.status_code == 404:
-        print(f"\n[{B} LINKTR{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ XBOX GAMER ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('xbox.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.xbox.com", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    XBOXGAMERTAG_Url = f"https://www.xboxgamertag.com/search/{usernames}"
+                XBOXGAMERTAG_Url = f"https://www.xboxgamertag.com/search/{usernames}"
 
-    XBOXGAMERTAG_Request = requests.get(XBOXGAMERTAG_Url, headers=headers)
+                XBOXGAMERTAG_Request = requests.get(XBOXGAMERTAG_Url, headers=headers)
 
-    if XBOXGAMERTAG_Request.status_code == 200:
+                if XBOXGAMERTAG_Request.status_code == 200:
+                    print(f"\n[{B} XBOX GAMER{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {XBOXGAMERTAG_Url}")
+
+                    LINKTR_Soup = BeautifulSoup(XBOXGAMERTAG_Request.text, "html.parser")
+
+                    Gamerscore = LINKTR_Soup.find('div', class_="col-auto profile-detail-item")
+
+                    name_XBOX = LINKTR_Soup.find('title')
+
+                    def remove(string):
+                        return string.replace("""
+                                                """, " ")
+
+                    string = Gamerscore.getText()
+                    str = remove(string)
+                    new_str = str.strip()
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_XBOX.getText()}")
+                    print(f"{' ' * 5}└[{Y}•{RS}] {C}User Gamer Score {Y}:{RS} {new_str}")
+
+                if XBOXGAMERTAG_Request.status_code == 404:
+                    print(f"\n[{B} XBOX GAMER{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} XBOX GAMER{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} XBOX GAMER{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} XBOX GAMER{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {XBOXGAMERTAG_Url}")
-
-        LINKTR_Soup = BeautifulSoup(XBOXGAMERTAG_Request.text, "html.parser")
-
-        Gamerscore = LINKTR_Soup.find('div', class_="col-auto profile-detail-item")
-
-        name_XBOX = LINKTR_Soup.find('title')
-
-        def remove(string):
-            return string.replace("""
-                                    """, " ")
-
-        string = Gamerscore.getText()
-        str = remove(string)
-        new_str = str.strip()
-        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_XBOX.getText()}")
-        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Gamer Score {Y}:{RS} {new_str}")
-
-    if XBOXGAMERTAG_Request.status_code == 404:
-        print(f"\n[{B} XBOX GAMER{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ TWITCH ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('twitch.tv')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.twitch.tv", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    TWITCH_Url = f"https://twitchtracker.com/{usernames}"
+                TWITCH_Url = f"https://twitchtracker.com/{usernames}"
 
-    TWITCH_Request = requests.get(TWITCH_Url, headers=headers)
+                TWITCH_Request = requests.get(TWITCH_Url, headers=headers)
 
-    if TWITCH_Request.status_code == 200:
+                if TWITCH_Request.status_code == 200:
 
+                    print(f"\n[{B} TWITCH{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {'https://www.twitch.tv/' + usernames}")
+
+                    TWITCH_Soup = BeautifulSoup(TWITCH_Request.text, "html.parser")
+
+                    name_TWITCH = TWITCH_Soup.find('div', id='app-title')
+
+                    BIO_TWITCH = TWITCH_Soup.find('div', style="word-wrap:break-word;font-size:12px;")
+
+                    PLAYER_RANK_TWITCH = TWITCH_Soup.find('span', class_="to-number")
+
+                    PLAYER_Followers_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;")
+
+                    PLAYER_Avgviewer_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;margin-left: 20px;")
+
+                    name_TWITCH_SPACE_REMOVE = name_TWITCH.getText()
+                    name_TWITCH_SPACE_REMOVE_RESULT = name_TWITCH_SPACE_REMOVE.strip()
+
+                    if (not BIO_TWITCH):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Player Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Player Name {Y}:{RS} {name_TWITCH_SPACE_REMOVE_RESULT}")
+
+                    if (not BIO_TWITCH):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BIO_TWITCH.get_text()}")
+
+                        UserMention_Bio = BIO_TWITCH.get_text()
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = BIO_TWITCH.get_text()
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = BIO_TWITCH.get_text()
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                    if (not PLAYER_Followers_TWITCHs):
+                        print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Player Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        PLAYER_FOLLOWERSS_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;").find('span',
+                                                                                                                 class_="to-number")
+                        print(
+                            f"\n{' ' * 5}└[{G}•{RS}] {C}User Player Followers {Y}:{RS} {PLAYER_FOLLOWERSS_TWITCHs.string}")
+
+                    if (not PLAYER_RANK_TWITCH):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player RANK {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Player RANK {Y}:{RS} {PLAYER_RANK_TWITCH.getText()}")
+
+                if TWITCH_Request.status_code == 404:
+                    print(f"\n[{B} TWITCH{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} TWITCH{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} TWITCH{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} TWITCH{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {'https://www.twitch.tv/' + usernames}")
-
-        TWITCH_Soup = BeautifulSoup(TWITCH_Request.text, "html.parser")
-
-        name_TWITCH = TWITCH_Soup.find('div', id='app-title')
-
-        BIO_TWITCH = TWITCH_Soup.find('div', style="word-wrap:break-word;font-size:12px;")
-
-        PLAYER_RANK_TWITCH = TWITCH_Soup.find('span', class_="to-number")
-
-        PLAYER_Followers_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;")
-
-        PLAYER_Avgviewer_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;margin-left: 20px;")
-
-        name_TWITCH_SPACE_REMOVE = name_TWITCH.getText()
-        name_TWITCH_SPACE_REMOVE_RESULT = name_TWITCH_SPACE_REMOVE.strip()
-
-        if (not BIO_TWITCH):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Player Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Player Name {Y}:{RS} {name_TWITCH_SPACE_REMOVE_RESULT}")
-
-        if (not BIO_TWITCH):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BIO_TWITCH.get_text()}")
-
-            UserMention_Bio = BIO_TWITCH.get_text()
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = BIO_TWITCH.get_text()
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = BIO_TWITCH.get_text()
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-        if (not PLAYER_Followers_TWITCHs):
-            print(f"\n{' ' * 5}└[{Y}•{RS}] {C}User Player Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            PLAYER_FOLLOWERSS_TWITCHs = TWITCH_Soup.find('div', style="display: inline-block;").find('span',
-                                                                                                     class_="to-number")
-            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Player Followers {Y}:{RS} {PLAYER_FOLLOWERSS_TWITCHs.string}")
-
-        if (not PLAYER_RANK_TWITCH):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Player RANK {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Player RANK {Y}:{RS} {PLAYER_RANK_TWITCH.getText()}")
-
-    if TWITCH_Request.status_code == 404:
-        print(f"\n[{B} TWITCH{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ PROFILES WORDPRESS ]
 
-    PROFILESWORDPRESS_Url = f"https://profiles.wordpress.org/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('profiles.wordpress.org')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://profiles.wordpress.org", timeout=5)
+            if response.status_code == 200:
+                PROFILESWORDPRESS_Url = f"https://profiles.wordpress.org/{usernames}/"
 
-    PROFILESWORDPRESS_Request = requests.get(PROFILESWORDPRESS_Url)
+                PROFILESWORDPRESS_Request = requests.get(PROFILESWORDPRESS_Url)
 
-    if PROFILESWORDPRESS_Request.status_code == 200:
+                if PROFILESWORDPRESS_Request.status_code == 200:
 
+                    print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {PROFILESWORDPRESS_Url}")
+
+                    PROFILESWORDPRESS_Soup = BeautifulSoup(PROFILESWORDPRESS_Request.text, "html.parser")
+
+                    NAME_title = PROFILESWORDPRESS_Soup.find('h2', attrs={'class': 'fn'})
+
+                    username_slack_title = PROFILESWORDPRESS_Soup.find('p', attrs={'id': 'slack-username'})
+
+                    Member_Since_title = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-member-since'})
+
+                    location_name = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-location'})
+
+                    USER_GITHUB_USERNAME = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-github'})
+
+                    user_job = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-job'})
+
+                    user_company = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-company'})
+
+                    Interests = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-interests'})
+
+                    BIO = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'})
+
+                    if (not NAME_title):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {NAME_title.string}")
+
+                    if (not username_slack_title):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Slack Username {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_PROFILESWORDPRESS_SPACE_REMOVE = username_slack_title.get_text()
+                        name_PROFILESWORDPRESS_SPACE_REMOVE_RESULT = name_PROFILESWORDPRESS_SPACE_REMOVE.strip()
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Slack Username {Y}:{RS} {name_PROFILESWORDPRESS_SPACE_REMOVE_RESULT}")
+
+                    if (not BIO):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        BIOS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'}).find('p')
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {BIOS.getText()}")
+
+                        UserMention_Bio = BIOS.getText()
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = BIOS.getText()
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = BIOS.getText()
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                    if (not Member_Since_title):
+                        print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        Member_Since_titleS = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-member-since'}).find(
+                            'strong')
+                        print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {Member_Since_titleS.get_text()}")
+
+                    if (not location_name):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        location_names = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-location'}).find('strong')
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Location {Y}:{RS} {location_names.get_text()}")
+
+                    if (not USER_GITHUB_USERNAME):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User GitHub {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        USER_GITHUB_USERNAMES = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-github'}).find(
+                            'strong')
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User GitHub {Y}:{RS} {USER_GITHUB_USERNAMES.get_text()}")
+
+                    if (not user_job):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Job Title {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        USER_JOB = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-job'}).find('strong')
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Job Title {Y}:{RS} {USER_JOB.get_text()}")
+
+                    if (not user_company):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Employer {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        USER_COMPANY = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-company'}).find('strong')
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Employer {Y}:{RS} {USER_COMPANY.get_text()}")
+
+                    if (not Interests):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Interests {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        InterestsS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-interests'}).find(
+                            'p')
+                        name_Interests_SPACE_REMOVE = InterestsS.getText()
+                        name_Interests_SPACE_REMOVE_RESULT = name_Interests_SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Interests {Y}:{RS} {name_Interests_SPACE_REMOVE_RESULT}")
+
+                if PROFILESWORDPRESS_Request.status_code == 404:
+                    print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {PROFILESWORDPRESS_Url}")
-
-        PROFILESWORDPRESS_Soup = BeautifulSoup(PROFILESWORDPRESS_Request.text, "html.parser")
-
-        NAME_title = PROFILESWORDPRESS_Soup.find('h2', attrs={'class': 'fn'})
-
-        username_slack_title = PROFILESWORDPRESS_Soup.find('p', attrs={'id': 'slack-username'})
-
-        Member_Since_title = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-member-since'})
-
-        location_name = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-location'})
-
-        USER_GITHUB_USERNAME = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-github'})
-
-        user_job = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-job'})
-
-        user_company = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-company'})
-
-        Interests = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-interests'})
-
-        BIO = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'})
-
-        if (not NAME_title):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {NAME_title.string}")
-
-        if (not username_slack_title):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Slack Username {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_PROFILESWORDPRESS_SPACE_REMOVE = username_slack_title.get_text()
-            name_PROFILESWORDPRESS_SPACE_REMOVE_RESULT = name_PROFILESWORDPRESS_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Slack Username {Y}:{RS} {name_PROFILESWORDPRESS_SPACE_REMOVE_RESULT}")
-
-        if (not BIO):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            BIOS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-about'}).find('p')
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Bio {Y}:{RS} {BIOS.getText()}")
-
-            UserMention_Bio = BIOS.getText()
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = BIOS.getText()
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = BIOS.getText()
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-        if (not Member_Since_title):
-            print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            Member_Since_titleS = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-member-since'}).find('strong')
-            print(f"\n{' ' * 5}└[{R}•{RS}] {C}User Member Since {Y}:{RS} {Member_Since_titleS.get_text()}")
-
-        if (not location_name):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            location_names = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-location'}).find('strong')
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Location {Y}:{RS} {location_names.get_text()}")
-
-        if (not USER_GITHUB_USERNAME):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User GitHub {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            USER_GITHUB_USERNAMES = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-github'}).find('strong')
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User GitHub {Y}:{RS} {USER_GITHUB_USERNAMES.get_text()}")
-
-        if (not user_job):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Job Title {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            USER_JOB = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-job'}).find('strong')
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Job Title {Y}:{RS} {USER_JOB.get_text()}")
-
-        if (not user_company):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Employer {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            USER_COMPANY = PROFILESWORDPRESS_Soup.find('li', attrs={'id': 'user-company'}).find('strong')
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Employer {Y}:{RS} {USER_COMPANY.get_text()}")
-
-        if (not Interests):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Interests {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            InterestsS = PROFILESWORDPRESS_Soup.find('div', attrs={'class': 'item-meta-interests'}).find('p')
-            name_Interests_SPACE_REMOVE = InterestsS.getText()
-            name_Interests_SPACE_REMOVE_RESULT = name_Interests_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Interests {Y}:{RS} {name_Interests_SPACE_REMOVE_RESULT}")
-
-    if PROFILESWORDPRESS_Request.status_code == 404:
-        print(f"\n[{B} PROFILES WORDPRESS{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ THERMI ]
 
-    THERMI_Url = f"https://thermi.com/providers_profiles/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname(f'thermi.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get(f"https://thermi.com", timeout=5)
+            if response.status_code == 200:
+                THERMI_Url = f"https://thermi.com/providers_profiles/{usernames}/"
 
-    THERMI_Request = requests.get(THERMI_Url)
+                THERMI_Request = requests.get(THERMI_Url)
 
-    if THERMI_Request.status_code == 200:
+                if THERMI_Request.status_code == 200:
 
+                    print(f"\n[{B} THERMI{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {THERMI_Url}")
+
+                    THERMI_Soup = BeautifulSoup(THERMI_Request.text, "html.parser")
+
+                    THERMI_NAME = THERMI_Soup.find('div', attrs={'class': 'provider_name'})
+
+                    specialty_NAME = THERMI_Soup.find('div', attrs={'class': 'provider_specialty'})
+
+                    Address_NAME = THERMI_Soup.find('div', attrs={'class': 'content_container'})
+
+                    PHONE_NUMBER = THERMI_Soup.find('a', attrs={'class': 'provider_phone'})
+
+                    if (not THERMI_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = THERMI_NAME.get_text()
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    if (not specialty_NAME):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Specialty {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = specialty_NAME.get_text()
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Specialty {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    if (not Address_NAME):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        Address_NAMES = THERMI_Soup.find('div', attrs={'class': 'content_container'}).find('address')
+                        name_THERMI_NAME_SPACE_REMOVE = Address_NAMES.get_text()
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Address {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    if (not PHONE_NUMBER):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = PHONE_NUMBER.get_text()
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+                        print(
+                            f"{' ' * 5}└[{R}•{RS}] {C}User PhoneNumber{RS}/{C}Telephone {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    print(
+                        f"{' ' * 5}[{G} NOTE {RS}] [ {C}YOU SEE THE {R}INFO{C} ON{RS},{C} THIS A {Y}DOCTORE{C} INFO{G}{RS} ] \n")
+
+                if THERMI_Request.status_code == 404:
+                    print(f"\n[{B} THERMI{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} THERMI{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} THERMI{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} THERMI{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {THERMI_Url}")
-
-        THERMI_Soup = BeautifulSoup(THERMI_Request.text, "html.parser")
-
-        THERMI_NAME = THERMI_Soup.find('div', attrs={'class': 'provider_name'})
-
-        specialty_NAME = THERMI_Soup.find('div', attrs={'class': 'provider_specialty'})
-
-        Address_NAME = THERMI_Soup.find('div', attrs={'class': 'content_container'})
-
-        PHONE_NUMBER = THERMI_Soup.find('a', attrs={'class': 'provider_phone'})
-
-        if (not THERMI_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = THERMI_NAME.get_text()
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        if (not specialty_NAME):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Specialty {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = specialty_NAME.get_text()
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Specialty {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        if (not Address_NAME):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            Address_NAMES = THERMI_Soup.find('div', attrs={'class': 'content_container'}).find('address')
-            name_THERMI_NAME_SPACE_REMOVE = Address_NAMES.get_text()
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Address {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        if (not PHONE_NUMBER):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = PHONE_NUMBER.get_text()
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-            print(
-                f"{' ' * 5}└[{R}•{RS}] {C}User PhoneNumber{RS}/{C}Telephone {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        print(f"{' ' * 5}[{G} NOTE {RS}] [ {C}YOU SEE THE {R}INFO{C} ON{RS},{C} THIS A {Y}DOCTORE{C} INFO{G}{RS} ] \n")
-
-    if THERMI_Request.status_code == 404:
-        print(f"\n[{B} THERMI{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ FREELANCER ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('freelancer.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.freelancer.com", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    FREELANCER_Url = f"https://www.freelancer.com/u/{usernames}"
+                FREELANCER_Url = f"https://www.freelancer.com/u/{usernames}"
 
-    FREELANCER_Request = requests.get(FREELANCER_Url, headers=headers)
+                FREELANCER_Request = requests.get(FREELANCER_Url, headers=headers)
 
-    if FREELANCER_Request.status_code == 200:
+                if FREELANCER_Request.status_code == 200:
 
+                    print(f"\n[{B} FREELANCER{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {FREELANCER_Url}")
+
+                    FREELANCER_Soup = BeautifulSoup(FREELANCER_Request.text, "html.parser")
+
+                    FREELANCER_NAME = FREELANCER_Soup.find('fl-col', class_="SummaryHeader")
+
+                    FREELANCER_TAGLINE = FREELANCER_Soup.find('fl-heading', class_="Tagline ng-star-inserted")
+
+                    FREELANCER_STAR = FREELANCER_Soup.find('fl-bit', class_="ValueBlock ng-star-inserted")
+
+                    FREELANCER_REVIEW = FREELANCER_Soup.find('fl-bit', class_="ReviewCount ng-star-inserted")
+
+                    FREELANCER_PER_HOURS = FREELANCER_Soup.find('fl-bit', class_="Row ng-star-inserted")
+
+                    FREELANCER_ADDRESS = FREELANCER_Soup.find('fl-col', class_="SupplementaryInfo")
+
+                    FREELANCER_JOBS_COMPLETED = FREELANCER_Soup.find('fl-text', class_="ReputationItemAmount")
+
+                    if (not FREELANCER_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FREELANCER_NAME.find('h3').get_text()}")
+
+                    if (not FREELANCER_TAGLINE):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User TagLine {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User TagLine {Y}:{RS} {FREELANCER_TAGLINE.find('h2').get_text()}")
+
+                    if (not FREELANCER_STAR):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Average Rating {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Average Rating {Y}:{RS} {FREELANCER_STAR.string}")
+
+                    if (not FREELANCER_REVIEW):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Review {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Review {Y}:{RS} {FREELANCER_REVIEW.get_text()}")
+
+                    if (not FREELANCER_PER_HOURS):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Charge {G}$USD{C} Hour{Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        FREELANCER_PER_HOURS_REMOVE = FREELANCER_PER_HOURS.getText()
+                        FREELANCER_PER_HOURS_REMOVE_RESULT = FREELANCER_PER_HOURS_REMOVE.strip()
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Charge {G}$USD{C} Hour{Y}:{RS} {FREELANCER_PER_HOURS_REMOVE_RESULT}")
+
+                    if (not FREELANCER_ADDRESS):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Address {Y}:{RS} {FREELANCER_ADDRESS.get_text()}")
+
+                    if (not FREELANCER_ADDRESS):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Jobs Completed {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{G}•{RS}] {C}User Jobs Completed {Y}:{RS} {FREELANCER_JOBS_COMPLETED.get_text()}")
+
+                    url = f"https://www.freelancer.com/api/users/0.1/users?limit=1&usernames[]={usernames}&avatar=true&online_offline_details=true&status=true&support_status_details=true&limited_account=true&webapp=1&compact=true&new_errors=true&new_pools=true"
+
+                    freelancer_Verifications_Request = requests.request("GET", url)
+
+                    freelancer_Verifications_Data_Json = json.loads(freelancer_Verifications_Request.content)
+
+                    freelancer_Verifications_ID = list(freelancer_Verifications_Data_Json['result']['users'].keys())[0]
+
+                    print(
+                        f"\n{' ' * 5}[{G} NOTE {RS}] [ {B}Freelancer {Y}Verified{C} Checker You Can Find {R}USER{Y} Facebook{RS}, {Y}Linkedin{C} IF YOUR {R}USER{Y} LINK {C}THIS {Y}ACCOUNT {C}WITH HIS {B}Freelancer Account{RS} ]\n")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'payment_verified'] == True:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Payment Verified {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Payment Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'email_verified'] == True:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Email Verified {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Email Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'deposit_made'] == True:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Deposit Made {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Deposit Made {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'profile_complete'] == True:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Complete {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Complete {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'phone_verified'] == True:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Phone Verified {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Phone Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'identity_verified'] == True:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Identity Verified {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Identity Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'facebook_connected'] == True:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Facebook Connected {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Facebook Connected {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'freelancer_verified_user'] == True:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Freelancer Verified_user {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Freelancer Verified_user {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'linkedin_connected'] == True:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Linkedin Connected {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Linkedin Connected {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                    if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
+                        'custom_charge_verified'] == True:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Custom Charge Verified {Y}:{RS} {G} True ✔️️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Custom Charge Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
+
+                if FREELANCER_Request.status_code == 404:
+                    print(f"\n[{B} FREELANCER{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} FREELANCER{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} FREELANCER{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} FREELANCER{RS} ]")
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {FREELANCER_Url}")
-
-        FREELANCER_Soup = BeautifulSoup(FREELANCER_Request.text, "html.parser")
-
-        FREELANCER_NAME = FREELANCER_Soup.find('fl-col', class_="SummaryHeader")
-
-        FREELANCER_TAGLINE = FREELANCER_Soup.find('fl-heading', class_="Tagline ng-star-inserted")
-
-        FREELANCER_STAR = FREELANCER_Soup.find('fl-bit', class_="ValueBlock ng-star-inserted")
-
-        FREELANCER_REVIEW = FREELANCER_Soup.find('fl-bit', class_="ReviewCount ng-star-inserted")
-
-        FREELANCER_PER_HOURS = FREELANCER_Soup.find('fl-bit', class_="Row ng-star-inserted")
-
-        FREELANCER_ADDRESS = FREELANCER_Soup.find('fl-col', class_="SupplementaryInfo")
-
-        FREELANCER_JOBS_COMPLETED = FREELANCER_Soup.find('fl-text', class_="ReputationItemAmount")
-
-        if (not FREELANCER_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FREELANCER_NAME.find('h3').get_text()}")
-
-        if (not FREELANCER_TAGLINE):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User TagLine {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User TagLine {Y}:{RS} {FREELANCER_TAGLINE.find('h2').get_text()}")
-
-        if (not FREELANCER_STAR):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Average Rating {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Average Rating {Y}:{RS} {FREELANCER_STAR.string}")
-
-        if (not FREELANCER_REVIEW):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Review {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Review {Y}:{RS} {FREELANCER_REVIEW.get_text()}")
-
-        if (not FREELANCER_PER_HOURS):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Charge {G}$USD{C} Hour{Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            FREELANCER_PER_HOURS_REMOVE = FREELANCER_PER_HOURS.getText()
-            FREELANCER_PER_HOURS_REMOVE_RESULT = FREELANCER_PER_HOURS_REMOVE.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Charge {G}$USD{C} Hour{Y}:{RS} {FREELANCER_PER_HOURS_REMOVE_RESULT}")
-
-        if (not FREELANCER_ADDRESS):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Address {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Address {Y}:{RS} {FREELANCER_ADDRESS.get_text()}")
-
-        if (not FREELANCER_ADDRESS):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Jobs Completed {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Jobs Completed {Y}:{RS} {FREELANCER_JOBS_COMPLETED.get_text()}")
-
-        url = f"https://www.freelancer.com/api/users/0.1/users?limit=1&usernames[]={usernames}&avatar=true&online_offline_details=true&status=true&support_status_details=true&limited_account=true&webapp=1&compact=true&new_errors=true&new_pools=true"
-
-        freelancer_Verifications_Request = requests.request("GET", url)
-
-        freelancer_Verifications_Data_Json = json.loads(freelancer_Verifications_Request.content)
-
-        freelancer_Verifications_ID = list(freelancer_Verifications_Data_Json['result']['users'].keys())[0]
 
         print(
-            f"\n{' ' * 5}[{G} NOTE {RS}] [ {B}Freelancer {Y}Verified{C} Checker You Can Find {R}USER{Y} Facebook{RS}, {Y}Linkedin{C} IF YOUR {R}USER{Y} LINK {C}THIS {Y}ACCOUNT {C}WITH HIS {B}Freelancer Account{RS} ]\n")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'payment_verified'] == True:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Payment Verified {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Payment Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'email_verified'] == True:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Email Verified {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Email Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'deposit_made'] == True:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Deposit Made {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Deposit Made {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'profile_complete'] == True:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Complete {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Complete {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'phone_verified'] == True:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Phone Verified {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Phone Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'identity_verified'] == True:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Identity Verified {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Identity Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'facebook_connected'] == True:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Facebook Connected {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Facebook Connected {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'freelancer_verified_user'] == True:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Freelancer Verified_user {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Freelancer Verified_user {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'linkedin_connected'] == True:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Linkedin Connected {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Linkedin Connected {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-        if freelancer_Verifications_Data_Json['result']['users'][freelancer_Verifications_ID]['status'][
-            'custom_charge_verified'] == True:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Custom Charge Verified {Y}:{RS} {G} True ✔️️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Custom Charge Verified {Y}:{RS} {R} False {R}❌️️{RS} ")
-
-    if FREELANCER_Request.status_code == 404:
-        print(f"\n[{B} FREELANCER{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ TradingView ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('tradingview.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.tradingview.com", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    TradingView_Url = f"https://www.tradingview.com/u/{usernames}"
+                TradingView_Url = f"https://www.tradingview.com/u/{usernames}"
 
-    TradingView_Request = requests.get(TradingView_Url, headers=headers)
+                TradingView_Request = requests.get(TradingView_Url, headers=headers)
 
-    if TradingView_Request.status_code == 200:
+                if TradingView_Request.status_code == 200:
 
+                    print(f"\n[{B} TradingView{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {TradingView_Url}")
+
+                    TradingView_Soup = BeautifulSoup(TradingView_Request.text, "html.parser")
+
+                    TradingView_IMAGE = TradingView_Soup.find('meta', property="og:image:secure_url")
+
+                    TradingView_NAME = TradingView_Soup.find('div', class_="tv-profile__main-block--container")
+
+                    if (not TradingView_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        TradingView_NAMES = TradingView_NAME.find('h1', class_="tv-profile__name-text").get_text()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {TradingView_NAMES}")
+
+                    if (not TradingView_IMAGE):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Image {Y}:{RS} {TradingView_IMAGE['content']}")
+
+                if TradingView_Request.status_code == 404:
+                    print(f"\n[{B} TradingView{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} TradingView{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} TradingView{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} TradingView{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {TradingView_Url}")
-
-        TradingView_Soup = BeautifulSoup(TradingView_Request.text, "html.parser")
-
-        TradingView_IMAGE = TradingView_Soup.find('meta', property="og:image:secure_url")
-
-        TradingView_NAME = TradingView_Soup.find('div', class_="tv-profile__main-block--container")
-
-        if (not TradingView_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            TradingView_NAMES = TradingView_NAME.find('h1', class_="tv-profile__name-text").get_text()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {TradingView_NAMES}")
-
-        if (not TradingView_IMAGE):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Image {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Image {Y}:{RS} {TradingView_IMAGE['content']}")
-
-    if TradingView_Request.status_code == 404:
-        print(f"\n[{B} TradingView{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ GAANA ]
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+    try:
+        ip_address = socket.gethostbyname('gaana.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://gaana.com", timeout=5)
+            if response.status_code == 200:
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    GAANA_Url = f"https://gaana.com/artist/{usernames}"
+                GAANA_Url = f"https://gaana.com/artist/{usernames}"
 
-    GAANA_Request = requests.request("GET", GAANA_Url, headers=headers)
+                GAANA_Request = requests.request("GET", GAANA_Url, headers=headers)
 
-    if GAANA_Request.status_code == 200:
+                if GAANA_Request.status_code == 200:
+                    print(f"\n[{B} GAANA{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {GAANA_Url}")
+                    GAANA_Soup = BeautifulSoup(GAANA_Request.text, "html.parser")
+
+                    GAANA_USER_NAME = GAANA_Soup.find('div', attrs={'class': 'info'})
+
+                    if (not GAANA_USER_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {GAANA_USER_NAME.find('div', attrs={'class': '_a'}).find('h1', attrs={'class': 'title t_over'}).string}")
+
+                elif GAANA_Request.status_code == 404:
+                    print(f"\n[{B} GAANA{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} GAANA{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} GAANA{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} GAANA{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {GAANA_Url}")
-        GAANA_Soup = BeautifulSoup(GAANA_Request.text, "html.parser")
 
-        GAANA_USER_NAME = GAANA_Soup.find('div', attrs={'class': 'info'})
-
-        if (not GAANA_USER_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {GAANA_USER_NAME.find('div', attrs={'class': '_a'}).find('h1', attrs={'class': 'title t_over'}).string}")
-
-    elif GAANA_Request.status_code == 404:
-        print(f"\n[{B} GAANA{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ FLICKR ]
 
-    FLICKR_Url = f"https://www.flickr.com/people/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('flickr.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.flickr.com", timeout=5)
+            if response.status_code == 200:
+                FLICKR_Url = f"https://www.flickr.com/people/{usernames}/"
 
-    FLICKR_Request = requests.get(FLICKR_Url)
+                FLICKR_Request = requests.get(FLICKR_Url)
 
-    if FLICKR_Request.status_code == 200:
+                if FLICKR_Request.status_code == 200:
 
+                    print(f"\n[{B} FLICKR{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {FLICKR_Url}")
+
+                    FLICKR_Soup = BeautifulSoup(FLICKR_Request.text, "html.parser")
+
+                    FLICKR_PROFILE_NAME = FLICKR_Soup.find('div', attrs={'class': 'title-container'})
+                    FLICKR_JOIN_DATE = FLICKR_Soup.find('div', attrs={'class': 'infos-view-container'})
+                    FLICKR_FOLLOWERS_FOLLOWING = FLICKR_Soup.find('div', attrs={'class': 'metadata-container'})
+
+                    if (not FLICKR_PROFILE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        seeking_space_remove = FLICKR_PROFILE_NAME.find('h1').getText()
+                        After_remove_seeking_space = seeking_space_remove.strip()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {After_remove_seeking_space}")
+
+                    if (not FLICKR_JOIN_DATE):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        seeking_space_remove = FLICKR_JOIN_DATE.find('ul').find('li').find('a', attrs={
+                            'class': 'archives-link'}).getText()
+                        After_remove_seeking_space = seeking_space_remove.strip()
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Join FLICKR {Y}:{RS} {After_remove_seeking_space}")
+
+                    if (not FLICKR_FOLLOWERS_FOLLOWING):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        seeking_space_remove = FLICKR_FOLLOWERS_FOLLOWING.find('div',
+                                                                               attrs={
+                                                                                   'class': 'coverphoto-stats'}).find(
+                            'p').getText()
+                        After_remove_seeking_space = seeking_space_remove.strip()
+                        print(
+                            f"{' ' * 5}└[{G}•{RS}] {C}User Followers & Following {Y}:{RS} {After_remove_seeking_space}")
+
+                elif FLICKR_Request.status_code == 404:
+                    print(f"\n[{B} FLICKR{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} FLICKR{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} FLICKR{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} FLICKR{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {FLICKR_Url}")
-
-        FLICKR_Soup = BeautifulSoup(FLICKR_Request.text, "html.parser")
-
-        FLICKR_PROFILE_NAME = FLICKR_Soup.find('div', attrs={'class': 'title-container'})
-        FLICKR_JOIN_DATE = FLICKR_Soup.find('div', attrs={'class': 'infos-view-container'})
-        FLICKR_FOLLOWERS_FOLLOWING = FLICKR_Soup.find('div', attrs={'class': 'metadata-container'})
-
-        if (not FLICKR_PROFILE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            seeking_space_remove = FLICKR_PROFILE_NAME.find('h1').getText()
-            After_remove_seeking_space = seeking_space_remove.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {After_remove_seeking_space}")
-
-        if (not FLICKR_JOIN_DATE):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            seeking_space_remove = FLICKR_JOIN_DATE.find('ul').find('li').find('a', attrs={
-                'class': 'archives-link'}).getText()
-            After_remove_seeking_space = seeking_space_remove.strip()
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Join FLICKR {Y}:{RS} {After_remove_seeking_space}")
-
-        if (not FLICKR_FOLLOWERS_FOLLOWING):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Seeking {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            seeking_space_remove = FLICKR_FOLLOWERS_FOLLOWING.find('div', attrs={'class': 'coverphoto-stats'}).find(
-                'p').getText()
-            After_remove_seeking_space = seeking_space_remove.strip()
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Followers & Following {Y}:{RS} {After_remove_seeking_space}")
-
-    elif FLICKR_Request.status_code == 404:
-        print(f"\n[{B} FLICKR{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ INDEPENDENT ACADEMIA ]
 
-    INDEPENDENT_ACADEMIA_URL = f"https://independent.academia.edu/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('academia.edu')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.academia.edu", timeout=5)
+            if response.status_code == 200:
+                INDEPENDENT_ACADEMIA_URL = f"https://independent.academia.edu/{usernames}"
 
-    INDEPENDENT_ACADEMIA_Request = requests.get(INDEPENDENT_ACADEMIA_URL)
+                INDEPENDENT_ACADEMIA_Request = requests.get(INDEPENDENT_ACADEMIA_URL)
 
-    if INDEPENDENT_ACADEMIA_Request.status_code == 200:
+                if INDEPENDENT_ACADEMIA_Request.status_code == 200:
 
+                    print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
+
+                    INDEPENDENT_ACADEMIA_Soup = BeautifulSoup(INDEPENDENT_ACADEMIA_Request.text, "html.parser")
+
+                    INDEPENDENT_ACADEMIA_FULL_NAME = INDEPENDENT_ACADEMIA_Soup.find('div',
+                                                                                    attrs={
+                                                                                        'class': 'profile-info-container'}).find(
+                        'h1', attrs={'class': 'ds-product-heading-lg'})
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {INDEPENDENT_ACADEMIA_URL}")
+
+                    if (not INDEPENDENT_ACADEMIA_FULL_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {INDEPENDENT_ACADEMIA_FULL_NAME.string}")
+
+                elif INDEPENDENT_ACADEMIA_Request.status_code == 404:
+                    print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
 
-        INDEPENDENT_ACADEMIA_Soup = BeautifulSoup(INDEPENDENT_ACADEMIA_Request.text, "html.parser")
-
-        INDEPENDENT_ACADEMIA_FULL_NAME = INDEPENDENT_ACADEMIA_Soup.find('div',
-                                                                        attrs={'class': 'profile-info-container'}).find(
-            'h1', attrs={'class': 'ds-product-heading-lg'})
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {INDEPENDENT_ACADEMIA_URL}")
-
-        if (not INDEPENDENT_ACADEMIA_FULL_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {INDEPENDENT_ACADEMIA_FULL_NAME.string}")
-
-    elif INDEPENDENT_ACADEMIA_Request.status_code == 404:
-        print(f"\n[{B} INDEPENDENT ACADEMIA{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ DEVELOPER APPLE ]
 
-    DEVELOPER_APPLE_URL = f"https://developer.apple.com/forums/profile/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('developer.apple.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://developer.apple.com", timeout=5)
+            if response.status_code == 200:
+                DEVELOPER_APPLE_URL = f"https://developer.apple.com/forums/profile/{usernames}"
 
-    DEVELOPER_APPLE_Request = requests.get(DEVELOPER_APPLE_URL)
+                DEVELOPER_APPLE_Request = requests.get(DEVELOPER_APPLE_URL)
 
-    if DEVELOPER_APPLE_Request.status_code == 200:
+                if DEVELOPER_APPLE_Request.status_code == 200:
 
+                    print(f"\n[{B} DEVELOPER APPLE{RS} ]")
+
+                    ANILIST_Soup = BeautifulSoup(DEVELOPER_APPLE_Request.text, "html.parser")
+
+                    DEVELOPER_APPLE_NAME = ANILIST_Soup.find('section', attrs={'class': 'user-info-box'})
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {DEVELOPER_APPLE_URL}")
+
+                    if (not DEVELOPER_APPLE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEVELOPER_APPLE_NAME.find('div', attrs={'class': 'user-name-reputation'}).find('h2').getText()}")
+
+                elif DEVELOPER_APPLE_Request.status_code == 404:
+                    print(f"\n[{B} DEVELOPER APPLE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} DEVELOPER APPLE{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} DEVELOPER APPLE{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} DEVELOPER APPLE{RS} ]")
 
-        ANILIST_Soup = BeautifulSoup(DEVELOPER_APPLE_Request.text, "html.parser")
-
-        DEVELOPER_APPLE_NAME = ANILIST_Soup.find('section', attrs={'class': 'user-info-box'})
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {DEVELOPER_APPLE_URL}")
-
-        if (not DEVELOPER_APPLE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEVELOPER_APPLE_NAME.find('div', attrs={'class': 'user-name-reputation'}).find('h2').getText()}")
-
-    elif DEVELOPER_APPLE_Request.status_code == 404:
-        print(f"\n[{B} DEVELOPER APPLE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ VIDEOHIVE NET ]
 
-    VIDEOHIVE_URL = f"https://videohive.net/user/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('videohive.net')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://videohive.net", timeout=5)
+            if response.status_code == 200:
+                VIDEOHIVE_URL = f"https://videohive.net/user/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    VIDEOHIVE_URL_Request = requests.request("GET", VIDEOHIVE_URL, headers=headers)
+                VIDEOHIVE_URL_Request = requests.request("GET", VIDEOHIVE_URL, headers=headers)
 
-    if VIDEOHIVE_URL_Request.status_code == 200:
+                if VIDEOHIVE_URL_Request.status_code == 200:
 
+                    print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+
+                    VIDEOHIVE_Soup = BeautifulSoup(VIDEOHIVE_URL_Request.text, "html.parser")
+
+                    VIDEOHIVE_NAME = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find('h1')
+                    VIDEOHIVE_LOCATION = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find('p')
+                    VIDEOHIVE_SALES = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find(
+                        'strong',
+                        attrs={
+                            'class': 't-heading -size-m'})
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {VIDEOHIVE_URL}")
+
+                    if (not VIDEOHIVE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {VIDEOHIVE_NAME.getText()}")
+
+                    if (not VIDEOHIVE_LOCATION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = VIDEOHIVE_LOCATION.getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    if (not VIDEOHIVE_SALES):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Sales {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = VIDEOHIVE_SALES.getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Sales {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+
+                elif VIDEOHIVE_URL_Request.status_code == 404:
+                    print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} VIDEOHIVE NET{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} VIDEOHIVE NET{RS} ]")
 
-        VIDEOHIVE_Soup = BeautifulSoup(VIDEOHIVE_URL_Request.text, "html.parser")
-
-        VIDEOHIVE_NAME = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find('h1')
-        VIDEOHIVE_LOCATION = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find('p')
-        VIDEOHIVE_SALES = VIDEOHIVE_Soup.find('div', attrs={'class': 'user-info-header h-mb0'}).find('strong', attrs={
-            'class': 't-heading -size-m'})
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {VIDEOHIVE_URL}")
-
-        if (not VIDEOHIVE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {VIDEOHIVE_NAME.getText()}")
-
-        if (not VIDEOHIVE_LOCATION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = VIDEOHIVE_LOCATION.getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        if (not VIDEOHIVE_SALES):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Sales {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = VIDEOHIVE_SALES.getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Sales {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-
-    elif VIDEOHIVE_URL_Request.status_code == 404:
-        print(f"\n[{B} VIDEOHIVE NET{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BANDCAMP ]
 
-    BANDCAMP_URL = f"https://bandcamp.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('bandcamp.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://bandcamp.com", timeout=5)
+            if response.status_code == 200:
+                BANDCAMP_URL = f"https://bandcamp.com/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BANDCAMP_URL_Request = requests.request("GET", BANDCAMP_URL, headers=headers)
+                BANDCAMP_URL_Request = requests.request("GET", BANDCAMP_URL, headers=headers)
 
-    if BANDCAMP_URL_Request.status_code == 200:
+                if BANDCAMP_URL_Request.status_code == 200:
 
+                    print(f"\n[{B} BANDCAMP{RS} ]")
+
+                    BANDCAMP_Soup = BeautifulSoup(BANDCAMP_URL_Request.text, "html.parser")
+
+                    BANDCAMP_NAME = BANDCAMP_Soup.find('div', attrs={'class': 'name'}).find('h1')
+                    BANDCAMP_LOCATION = BANDCAMP_Soup.find('div', attrs={'class': 'info'}).find('li')
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BANDCAMP_URL}")
+
+                    if (not BANDCAMP_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BANDCAMP_NAME.getText()}")
+
+                    if (not BANDCAMP_LOCATION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {BANDCAMP_LOCATION.getText()}")
+
+
+                elif BANDCAMP_URL_Request.status_code == 404:
+                    print(f"\n[{B} BANDCAMP{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} BANDCAMP{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BANDCAMP{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BANDCAMP{RS} ]")
 
-        BANDCAMP_Soup = BeautifulSoup(BANDCAMP_URL_Request.text, "html.parser")
-
-        BANDCAMP_NAME = BANDCAMP_Soup.find('div', attrs={'class': 'name'}).find('h1')
-        BANDCAMP_LOCATION = BANDCAMP_Soup.find('div', attrs={'class': 'info'}).find('li')
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BANDCAMP_URL}")
-
-        if (not BANDCAMP_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BANDCAMP_NAME.getText()}")
-
-        if (not BANDCAMP_LOCATION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {BANDCAMP_LOCATION.getText()}")
-
-
-    elif BANDCAMP_URL_Request.status_code == 404:
-        print(f"\n[{B} BANDCAMP{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BEZUZYTECZNA ]
 
-    BEHANCE_URL = f"https://bezuzyteczna.pl/uzytkownicy/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('bezuzyteczna.pl')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://bezuzyteczna.pl", timeout=5)
+            if response.status_code == 200:
+                BEHANCE_URL = f"https://bezuzyteczna.pl/uzytkownicy/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BEHANCE_URL_Request = requests.request("GET", BEHANCE_URL, headers=headers)
+                BEHANCE_URL_Request = requests.request("GET", BEHANCE_URL, headers=headers)
 
-    if BEHANCE_URL_Request.status_code == 200:
+                if BEHANCE_URL_Request.status_code == 200:
 
+                    print(f"\n[{B} BEZUZYTECZNA{RS} ]")
+
+                    BEHANCE_Soup = BeautifulSoup(BEHANCE_URL_Request.text, "html.parser")
+
+                    BANDCAMP_NAME = BEHANCE_Soup.find('div', attrs={'class': 'p-panel__name'})
+                    BANDCAMP_JOINED = BEHANCE_Soup.find('div', attrs={'class': 'p-panel__info-line'}).find('span',
+                                                                                                           attrs={
+                                                                                                               'p-panel__info-right'})
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BEHANCE_URL}")
+
+                    if (not BANDCAMP_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        name_THERMI_NAME_SPACE_REMOVE = BANDCAMP_NAME.getText()
+
+                        name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
+
+                    if (not BANDCAMP_JOINED):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BANDCAMP_JOINED.getText()}")
+
+
+                elif BEHANCE_URL_Request.status_code == 404:
+                    print(f"\n[{B} BEZUZYTECZNA{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} BEZUZYTECZNA{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BEZUZYTECZNA{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BEZUZYTECZNA{RS} ]")
 
-        BEHANCE_Soup = BeautifulSoup(BEHANCE_URL_Request.text, "html.parser")
-
-        BANDCAMP_NAME = BEHANCE_Soup.find('div', attrs={'class': 'p-panel__name'})
-        BANDCAMP_JOINED = BEHANCE_Soup.find('div', attrs={'class': 'p-panel__info-line'}).find('span', attrs={
-            'p-panel__info-right'})
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BEHANCE_URL}")
-
-        if (not BANDCAMP_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            name_THERMI_NAME_SPACE_REMOVE = BANDCAMP_NAME.getText()
-
-            name_THERMI_SPACE_REMOVE_RESULT = name_THERMI_NAME_SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {name_THERMI_SPACE_REMOVE_RESULT}")
-
-        if (not BANDCAMP_JOINED):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BANDCAMP_JOINED.getText()}")
-
-
-    elif BEHANCE_URL_Request.status_code == 404:
-        print(f"\n[{B} BEZUZYTECZNA{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BIKEMAP ]
 
-    BIKEMAP_URL = f"https://www.bikemap.net/en/u/{usernames}/routes/created/"
+    try:
+        ip_address = socket.gethostbyname('bikemap.net')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.bikemap.net", timeout=5)
+            if response.status_code == 200:
+                BIKEMAP_URL = f"https://www.bikemap.net/en/u/{usernames}/routes/created/"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BIKEMAP_URL_Request = requests.request("GET", BIKEMAP_URL, headers=headers)
+                BIKEMAP_URL_Request = requests.request("GET", BIKEMAP_URL, headers=headers)
 
-    if BIKEMAP_URL_Request.status_code == 200:
+                if BIKEMAP_URL_Request.status_code == 200:
 
+                    print(f"\n[{B} BIKEMAP{RS} ]")
+
+                    BIKEMAP_Soup = BeautifulSoup(BIKEMAP_URL_Request.text, "html.parser")
+
+                    BIKEMAP_NAME = BIKEMAP_Soup.find('div', attrs={'class': 'col-sm-10'}).find('h1',
+                                                                                               attrs={
+                                                                                                   'class': 'title mr'})
+                    BIKEMAP_JOIN = BIKEMAP_Soup.find('div', attrs={'class': 'title-info'}).find('span',
+                                                                                                attrs={
+                                                                                                    'class': 'member-since'})
+                    BIKEMAP_LOCATION = BIKEMAP_Soup.find('div', attrs={'class': 'title-info'}).find('span',
+                                                                                                    attrs={
+                                                                                                        'class': 'location'})
+                    BIKEMAP_PROFILE_PIC = BIKEMAP_Soup.find('div', attrs={'class': 'col-sm-2'}).findAll('img')
+
+                    BIKEMAP_PROFILE_PICS = BIKEMAP_PROFILE_PIC[0]
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BIKEMAP_URL}")
+
+                    if (not BIKEMAP_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BIKEMAP_NAME.getText()}")
+
+                    if (not BIKEMAP_JOIN):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BIKEMAP_JOIN.getText()}")
+
+                    if (not BIKEMAP_LOCATION):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Location {Y}:{RS} {BIKEMAP_LOCATION.getText()}")
+
+                    if (not BIKEMAP_PROFILE_PICS):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{R}•{RS}] {C}User Profile Photo {Y}:{RS} {BIKEMAP_PROFILE_PICS.attrs['src']}")
+
+
+                elif BIKEMAP_URL_Request.status_code == 404:
+                    print(f"\n[{B} BIKEMAP{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} BIKEMAP{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BIKEMAP{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BIKEMAP{RS} ]")
 
-        BIKEMAP_Soup = BeautifulSoup(BIKEMAP_URL_Request.text, "html.parser")
-
-        BIKEMAP_NAME = BIKEMAP_Soup.find('div', attrs={'class': 'col-sm-10'}).find('h1', attrs={'class': 'title mr'})
-        BIKEMAP_JOIN = BIKEMAP_Soup.find('div', attrs={'class': 'title-info'}).find('span',
-                                                                                    attrs={'class': 'member-since'})
-        BIKEMAP_LOCATION = BIKEMAP_Soup.find('div', attrs={'class': 'title-info'}).find('span',
-                                                                                        attrs={'class': 'location'})
-        BIKEMAP_PROFILE_PIC = BIKEMAP_Soup.find('div', attrs={'class': 'col-sm-2'}).findAll('img')
-
-        BIKEMAP_PROFILE_PICS = BIKEMAP_PROFILE_PIC[0]
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {BIKEMAP_URL}")
-
-        if (not BIKEMAP_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BIKEMAP_NAME.getText()}")
-
-        if (not BIKEMAP_JOIN):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BIKEMAP_JOIN.getText()}")
-
-        if (not BIKEMAP_LOCATION):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Location {Y}:{RS} {BIKEMAP_LOCATION.getText()}")
-
-        if (not BIKEMAP_PROFILE_PICS):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Profile Photo {Y}:{RS} {BIKEMAP_PROFILE_PICS.attrs['src']}")
-
-
-    elif BIKEMAP_URL_Request.status_code == 404:
-        print(f"\n[{B} BIKEMAP{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ FORUM DANGEROUSTHINGS ]
 
-    FORUM_DANGEROUSTHINGS_URL = f"https://forum.dangerousthings.com/u/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('forum.dangerousthings.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://forum.dangerousthings.com", timeout=5)
+            if response.status_code == 200:
+                FORUM_DANGEROUSTHINGS_URL = f"https://forum.dangerousthings.com/u/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    FORUM_DANGEROUSTHINGS_URL_Request = requests.request("GET", FORUM_DANGEROUSTHINGS_URL, headers=headers)
+                FORUM_DANGEROUSTHINGS_URL_Request = requests.request("GET", FORUM_DANGEROUSTHINGS_URL, headers=headers)
 
-    if FORUM_DANGEROUSTHINGS_URL_Request.status_code == 200:
+                if FORUM_DANGEROUSTHINGS_URL_Request.status_code == 200:
+                    print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {FORUM_DANGEROUSTHINGS_URL}")
+
+                    FORUM_DANGEROUSTHINGS_Soup = BeautifulSoup(FORUM_DANGEROUSTHINGS_URL_Request.text, "html.parser")
+
+                    FORUM_DANGEROUSTHINGS_NAME = FORUM_DANGEROUSTHINGS_Soup.find('div',
+                                                                                 attrs={'class': 'user-crawler'}).find(
+                        'h2',
+                        attrs={
+                            'class': 'username'})
+
+                    FORUM_DANGEROUSTHINGS_BIO = FORUM_DANGEROUSTHINGS_Soup.find('p')
+
+                    if (not FORUM_DANGEROUSTHINGS_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FORUM_DANGEROUSTHINGS_NAME.getText()}")
+
+                    if (not FORUM_DANGEROUSTHINGS_BIO):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {FORUM_DANGEROUSTHINGS_BIO.getText()}")
+
+                        UserMention_Bio = FORUM_DANGEROUSTHINGS_BIO.getText()
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = FORUM_DANGEROUSTHINGS_BIO.getText()
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = FORUM_DANGEROUSTHINGS_BIO.getText()
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{B}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
+                    print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {FORUM_DANGEROUSTHINGS_URL}")
 
-        FORUM_DANGEROUSTHINGS_Soup = BeautifulSoup(FORUM_DANGEROUSTHINGS_URL_Request.text, "html.parser")
-
-        FORUM_DANGEROUSTHINGS_NAME = FORUM_DANGEROUSTHINGS_Soup.find('div', attrs={'class': 'user-crawler'}).find('h2',
-                                                                                                                  attrs={
-                                                                                                                      'class': 'username'})
-
-        FORUM_DANGEROUSTHINGS_BIO = FORUM_DANGEROUSTHINGS_Soup.find('p')
-
-        if (not FORUM_DANGEROUSTHINGS_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {FORUM_DANGEROUSTHINGS_NAME.getText()}")
-
-        if (not FORUM_DANGEROUSTHINGS_BIO):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {FORUM_DANGEROUSTHINGS_BIO.getText()}")
-
-            UserMention_Bio = FORUM_DANGEROUSTHINGS_BIO.getText()
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = FORUM_DANGEROUSTHINGS_BIO.getText()
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = FORUM_DANGEROUSTHINGS_BIO.getText()
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{B}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-    elif FORUM_DANGEROUSTHINGS_URL_Request.status_code == 404:
-        print(f"\n[{B} FORUM DANGEROUSTHINGS{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ COMMUNITY BITWARDEN ]
 
-    COMMUNITY_BITWARDEN_URL = f"https://community.bitwarden.com/u/{usernames}/summary"
+    try:
+        ip_address = socket.gethostbyname('community.bitwarden.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://community.bitwarden.com", timeout=5)
+            if response.status_code == 200:
+                COMMUNITY_BITWARDEN_URL = f"https://community.bitwarden.com/u/{usernames}/summary"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    COMMUNITY_BITWARDEN_URL_Request = requests.request("GET", COMMUNITY_BITWARDEN_URL, headers=headers)
+                COMMUNITY_BITWARDEN_URL_Request = requests.request("GET", COMMUNITY_BITWARDEN_URL, headers=headers)
 
-    if COMMUNITY_BITWARDEN_URL_Request.status_code == 200:
+                if COMMUNITY_BITWARDEN_URL_Request.status_code == 200:
+                    print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_BITWARDEN_URL}")
+
+                    COMMUNITY_BITWARDEN_Soup = BeautifulSoup(COMMUNITY_BITWARDEN_URL_Request.text, "html.parser")
+
+                    COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_Soup.find('div',
+                                                                                     attrs={
+                                                                                         'id': 'main-outlet'}).findAll(
+                        'img')
+
+                    COMMUNITY_BITWARDEN_PROFILE_NAME = COMMUNITY_BITWARDEN_Soup.find('div',
+                                                                                     attrs={'id': 'main-outlet'}).find(
+                        'h2',
+                        attrs={
+                            'class': 'username'})
+
+                    COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_PROFILE_PICS[0]
+
+                    if (not COMMUNITY_BITWARDEN_PROFILE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_NAME.getText()}")
+
+                    if (not COMMUNITY_BITWARDEN_PROFILE_PICS):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_PICS.attrs['src']}")
+
+
+                elif COMMUNITY_BITWARDEN_URL_Request.status_code == 404:
+                    print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_BITWARDEN_URL}")
 
-        COMMUNITY_BITWARDEN_Soup = BeautifulSoup(COMMUNITY_BITWARDEN_URL_Request.text, "html.parser")
-
-        COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_Soup.find('div', attrs={'id': 'main-outlet'}).findAll(
-            'img')
-
-        COMMUNITY_BITWARDEN_PROFILE_NAME = COMMUNITY_BITWARDEN_Soup.find('div', attrs={'id': 'main-outlet'}).find('h2',
-                                                                                                                  attrs={
-                                                                                                                      'class': 'username'})
-
-        COMMUNITY_BITWARDEN_PROFILE_PICS = COMMUNITY_BITWARDEN_PROFILE_PICS[0]
-
-        if (not COMMUNITY_BITWARDEN_PROFILE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_NAME.getText()}")
-
-        if (not COMMUNITY_BITWARDEN_PROFILE_PICS):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_BITWARDEN_PROFILE_PICS.attrs['src']}")
-
-
-    elif COMMUNITY_BITWARDEN_URL_Request.status_code == 404:
-        print(f"\n[{B} COMMUNITY BITWARDEN{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BOOKCROSSING ]
 
-    BOOKCROSSING_URL = f"https://www.bookcrossing.com/mybookshelf/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('facebook.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.facebook.com", timeout=5)
+            if response.status_code == 200:
+                BOOKCROSSING_URL = f"https://www.bookcrossing.com/mybookshelf/{usernames}/"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BOOKCROSSING_URL_Request = requests.request("GET", BOOKCROSSING_URL, headers=headers)
+                BOOKCROSSING_URL_Request = requests.request("GET", BOOKCROSSING_URL, headers=headers)
 
-    if BOOKCROSSING_URL_Request.status_code == 200:
+                if BOOKCROSSING_URL_Request.status_code == 200:
+                    print(f"\n[{B} BOOKCROSSING{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BOOKCROSSING_URL}")
+
+                    BOOKCROSSING_Soup = BeautifulSoup(BOOKCROSSING_URL_Request.text, "html.parser")
+
+                    BOOKCROSSING_NAME = BOOKCROSSING_Soup.find('div', attrs={'class': 'col small'}).find('h2')
+
+                    if (not BOOKCROSSING_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BOOKCROSSING_NAME.getText()}")
+
+                elif BOOKCROSSING_URL_Request.status_code == 404:
+                    print(f"\n[{B} BOOKCROSSING{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} BOOKCROSSING{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BOOKCROSSING{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BOOKCROSSING{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BOOKCROSSING_URL}")
 
-        BOOKCROSSING_Soup = BeautifulSoup(BOOKCROSSING_URL_Request.text, "html.parser")
-
-        BOOKCROSSING_NAME = BOOKCROSSING_Soup.find('div', attrs={'class': 'col small'}).find('h2')
-
-        if (not BOOKCROSSING_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BOOKCROSSING_NAME.getText()}")
-
-    elif BOOKCROSSING_URL_Request.status_code == 404:
-        print(f"\n[{B} BOOKCROSSING{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BUY ME A COFFEE ]
 
-    BUY_ME_A_COFFEE_URL = f"https://www.buymeacoffee.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('buymeacoffee.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.buymeacoffee.com", timeout=5)
+            if response.status_code == 200:
+                BUY_ME_A_COFFEE_URL = f"https://www.buymeacoffee.com/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BUY_ME_A_COFFEE_URL_Request = requests.request("GET", BUY_ME_A_COFFEE_URL, headers=headers)
+                BUY_ME_A_COFFEE_URL_Request = requests.request("GET", BUY_ME_A_COFFEE_URL, headers=headers)
 
-    if BUY_ME_A_COFFEE_URL_Request.status_code == 200:
+                if BUY_ME_A_COFFEE_URL_Request.status_code == 200:
+                    print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUY_ME_A_COFFEE_URL}")
+
+                    BUY_ME_A_COFFEE_Soup = BeautifulSoup(BUY_ME_A_COFFEE_URL_Request.text, "html.parser")
+
+                    BUY_ME_A_COFFEE_NAME = BUY_ME_A_COFFEE_Soup.find('div', attrs={
+                        'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
+                    BUY_ME_A_COFFEE_DESCRIPTION = BUY_ME_A_COFFEE_Soup.find('div', attrs={
+                        'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
+                    BUY_ME_A_COFFEE_PROFILE_PHOTO = BUY_ME_A_COFFEE_Soup.find('div', attrs={
+                        'class': 'ctr-img-w-h mg-0-a'}).findAll(
+                        'img')
+
+                    BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS = BUY_ME_A_COFFEE_PROFILE_PHOTO[0]
+
+                    if (not BUY_ME_A_COFFEE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUY_ME_A_COFFEE_NAME[0].getText()}")
+
+                    if (not BUY_ME_A_COFFEE_DESCRIPTION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BUY_ME_A_COFFEE_DESCRIPTION[1].getText()}")
+
+                        UserMention_Bio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                    if (not BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS):
+                        print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS.attrs['data-src']}")
+
+
+                elif BUY_ME_A_COFFEE_URL_Request.status_code == 404:
+                    print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BUY ME A COFFEE{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BUY ME A COFFEE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUY_ME_A_COFFEE_URL}")
 
-        BUY_ME_A_COFFEE_Soup = BeautifulSoup(BUY_ME_A_COFFEE_URL_Request.text, "html.parser")
-
-        BUY_ME_A_COFFEE_NAME = BUY_ME_A_COFFEE_Soup.find('div', attrs={
-            'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
-        BUY_ME_A_COFFEE_DESCRIPTION = BUY_ME_A_COFFEE_Soup.find('div', attrs={
-            'class': 'p-relative dis-inline-block w-100 xs-pd-l-16 xs-pd-r-16'}).find('h1').find_all('span')
-        BUY_ME_A_COFFEE_PROFILE_PHOTO = BUY_ME_A_COFFEE_Soup.find('div', attrs={'class': 'ctr-img-w-h mg-0-a'}).findAll(
-            'img')
-
-        BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS = BUY_ME_A_COFFEE_PROFILE_PHOTO[0]
-
-        if (not BUY_ME_A_COFFEE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUY_ME_A_COFFEE_NAME[0].getText()}")
-
-        if (not BUY_ME_A_COFFEE_DESCRIPTION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {BUY_ME_A_COFFEE_DESCRIPTION[1].getText()}")
-
-            UserMention_Bio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = BUY_ME_A_COFFEE_DESCRIPTION[1].getText()
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-        if (not BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS):
-            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {BUY_ME_A_COFFEE_PROFILE_PROFILE_PICS.attrs['data-src']}")
-
-
-    elif BUY_ME_A_COFFEE_URL_Request.status_code == 404:
-        print(f"\n[{B} BUY ME A COFFEE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ BUZZFEED ]
 
-    BUZZFEED_URL = f"https://www.buzzfeed.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('buzzfeed.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.buzzfeed.com", timeout=5)
+            if response.status_code == 200:
+                BUZZFEED_URL = f"https://www.buzzfeed.com/{usernames}"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    BUZZFEED_URL_Request = requests.request("GET", BUZZFEED_URL, headers=headers)
+                BUZZFEED_URL_Request = requests.request("GET", BUZZFEED_URL, headers=headers)
 
-    if BUZZFEED_URL_Request.status_code == 200:
+                if BUZZFEED_URL_Request.status_code == 200:
+                    print(f"\n[{B} BUZZFEED{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUZZFEED_URL}")
+
+                    BUZZFEED_Soup = BeautifulSoup(BUZZFEED_URL_Request.text, "html.parser")
+
+                    BUZZFEED_NAME = BUZZFEED_Soup.find('div', attrs={'class': 'userNameContainer__3Ba3D0bepv'}).find(
+                        'h1')
+                    BUZZFEED_JOIN = BUZZFEED_Soup.find('dl', attrs={'class': 'userMetaList__3R_19D6l1X'}).find('dd')
+
+                    if (not BUZZFEED_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUZZFEED_NAME.getText()}")
+
+                    if (not BUZZFEED_JOIN):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BUZZFEED_JOIN.getText()}")
+
+
+                elif BUZZFEED_URL_Request.status_code == 404:
+                    print(f"\n[{B} BUZZFEED{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} BUZZFEED{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} BUZZFEED{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} BUZZFEED{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {BUZZFEED_URL}")
 
-        BUZZFEED_Soup = BeautifulSoup(BUZZFEED_URL_Request.text, "html.parser")
-
-        BUZZFEED_NAME = BUZZFEED_Soup.find('div', attrs={'class': 'userNameContainer__3Ba3D0bepv'}).find('h1')
-        BUZZFEED_JOIN = BUZZFEED_Soup.find('dl', attrs={'class': 'userMetaList__3R_19D6l1X'}).find('dd')
-
-        if (not BUZZFEED_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {BUZZFEED_NAME.getText()}")
-
-        if (not BUZZFEED_JOIN):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Joined {Y}:{RS} {BUZZFEED_JOIN.getText()}")
-
-
-    elif BUZZFEED_URL_Request.status_code == 404:
-        print(f"\n[{B} BUZZFEED{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ CNET ]
 
-    CNET_URL = f"https://www.cnet.com/profiles/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('cnet.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.cnet.com", timeout=5)
+            if response.status_code == 200:
+                CNET_URL = f"https://www.cnet.com/profiles/{usernames}/"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    CNET_URL_Request = requests.request("GET", CNET_URL, headers=headers)
+                CNET_URL_Request = requests.request("GET", CNET_URL, headers=headers)
 
-    if CNET_URL_Request.status_code == 200:
+                if CNET_URL_Request.status_code == 200:
+                    print(f"\n[{B} CNET{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CNET_URL}")
+
+                    CNET_Soup = BeautifulSoup(CNET_URL_Request.text, "html.parser")
+
+                    CNET_NAME = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('h1').find('span',
+                                                                                                    attrs={
+                                                                                                        'itemprop': 'name'})
+                    CNET_LOCATION = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('div',
+                                                                                             attrs={
+                                                                                                 'class': 'col-5'}).find(
+                        'span', attrs={'itemprop': 'locality'})
+                    CNET_PROFILE_PHOTO = CNET_Soup.find('div', attrs={'class': 'headshot big'})
+
+                    if (not CNET_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {CNET_NAME.getText()}")
+
+                    if (not CNET_LOCATION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {CNET_LOCATION.getText()}")
+
+                    if (not CNET_PROFILE_PHOTO):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        CNET_PHOTO = CNET_PROFILE_PHOTO.find('figure', attrs={'class': 'img'}).findAll('img')
+
+                        CNETS_PHOTO = CNET_PHOTO[0]
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {CNETS_PHOTO.attrs['src']}")
+
+                elif CNET_URL_Request.status_code == 404:
+                    print(f"\n[{B} CNET{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} CNET{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} CNET{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} CNET{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CNET_URL}")
 
-        CNET_Soup = BeautifulSoup(CNET_URL_Request.text, "html.parser")
-
-        CNET_NAME = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('h1').find('span',
-                                                                                        attrs={'itemprop': 'name'})
-        CNET_LOCATION = CNET_Soup.find('div', attrs={'id': 'profile-info'}).find('div', attrs={'class': 'col-5'}).find(
-            'span', attrs={'itemprop': 'locality'})
-        CNET_PROFILE_PHOTO = CNET_Soup.find('div', attrs={'class': 'headshot big'})
-
-        if (not CNET_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {CNET_NAME.getText()}")
-
-        if (not CNET_LOCATION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {CNET_LOCATION.getText()}")
-
-        if (not CNET_PROFILE_PHOTO):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            CNET_PHOTO = CNET_PROFILE_PHOTO.find('figure', attrs={'class': 'img'}).findAll('img')
-
-            CNETS_PHOTO = CNET_PHOTO[0]
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {CNETS_PHOTO.attrs['src']}")
-
-    elif CNET_URL_Request.status_code == 404:
-        print(f"\n[{B} CNET{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ COROFLOT ]
 
-    COROFLOT_URL = f"https://www.coroflot.com/{usernames}/profile"
+    try:
+        ip_address = socket.gethostbyname('coroflot.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.coroflot.com", timeout=5)
+            if response.status_code == 200:
+                COROFLOT_URL = f"https://www.coroflot.com/{usernames}/profile"
 
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
-    }
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+                }
 
-    COROFLOT_URL_Request = requests.request("GET", COROFLOT_URL, headers=headers)
+                COROFLOT_URL_Request = requests.request("GET", COROFLOT_URL, headers=headers)
 
-    if COROFLOT_URL_Request.status_code == 200:
+                if COROFLOT_URL_Request.status_code == 200:
 
+                    print(f"\n[{B} COROFLOT{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {COROFLOT_URL}")
+
+                    COROFLOT_Soup = BeautifulSoup(COROFLOT_URL_Request.text, "html.parser")
+
+                    COROFLOT_NAME = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('h1',
+                                                                                                  attrs={
+                                                                                                      'class': 'name_full'})
+                    COROFLOT_LOCATION = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('div',
+                                                                                                      attrs={
+                                                                                                          'class': 'location'})
+                    COROFLOT_JOIN = COROFLOT_Soup.find('div', attrs={'class': 'member_since_block'})
+
+                    if (not COROFLOT_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        SPACE_REMOVE = COROFLOT_NAME.get_text()
+                        SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SPACE_REMOVE_RESULT}")
+
+                    if (not COROFLOT_LOCATION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {COROFLOT_LOCATION.getText()}")
+
+                    if (not COROFLOT_JOIN):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        SPACE_REMOVE = COROFLOT_JOIN.get_text()
+                        SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {SPACE_REMOVE_RESULT}")
+
+                elif COROFLOT_URL_Request.status_code == 404:
+                    print(f"\n[{B} COROFLOT{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} COROFLOT{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} COROFLOT{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} COROFLOT{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url {Y}:{RS} {COROFLOT_URL}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
-        COROFLOT_Soup = BeautifulSoup(COROFLOT_URL_Request.text, "html.parser")
+    # [ DRIBBBLE ]
 
-        COROFLOT_NAME = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('h1',
-                                                                                      attrs={'class': 'name_full'})
-        COROFLOT_LOCATION = COROFLOT_Soup.find('div', attrs={'class': 'right_side'}).find('div',
-                                                                                          attrs={'class': 'location'})
-        COROFLOT_JOIN = COROFLOT_Soup.find('div', attrs={'class': 'member_since_block'})
+    try:
+        ip_address = socket.gethostbyname('dribbble.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://dribbble.com", timeout=5)
+            if response.status_code == 200:
+                DRIBBBLE_Url = f"https://dribbble.com/{usernames}/about"
 
-        if (not COROFLOT_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            SPACE_REMOVE = COROFLOT_NAME.get_text()
-            SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SPACE_REMOVE_RESULT}")
+                DRIBBBLE_Request = requests.get(DRIBBBLE_Url)
 
-        if (not COROFLOT_LOCATION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {COROFLOT_LOCATION.getText()}")
+                if DRIBBBLE_Request.status_code == 200:
 
-        if (not COROFLOT_JOIN):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            SPACE_REMOVE = COROFLOT_JOIN.get_text()
-            SPACE_REMOVE_RESULT = SPACE_REMOVE.strip()
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined {Y}:{RS} {SPACE_REMOVE_RESULT}")
+                    print(f"\n[{B} DRIBBBLE{RS} ]")
 
-    elif COROFLOT_URL_Request.status_code == 404:
-        print(f"\n[{B} COROFLOT{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DRIBBBLE_Url}")
+
+                    DRIBBBLE_Soup = BeautifulSoup(DRIBBBLE_Request.text, "html.parser")
+
+                    DRIBBBLE_NAME = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-content'}).find('h1', attrs={
+                        'class': 'masthead-profile-name'})
+
+                    DRIBBBLE_ADDRESS = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-content'}).find('p', attrs={
+                        'class': 'masthead-profile-locality'})
+
+                    DRIBBBLE_JOIN = DRIBBBLE_Soup.find('div', attrs={'class': 'about-content-main'}).find('p', attrs={
+                        'class': 'info-item created'})
+
+                    DRIBBBLE_BIO = DRIBBBLE_Soup.find('div', attrs={'class': 'about-content-main'}).find('p', attrs={
+                        'class': 'empty-bio'})
+
+                    DRIBBBLE_PROFILE_PHOTO = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-avatar'})
+
+                    if (not DRIBBBLE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DRIBBBLE_NAME.string}")
+
+                    if (not DRIBBBLE_ADDRESS):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {DRIBBBLE_ADDRESS.string}")
+
+                    if (not DRIBBBLE_JOIN):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined Date {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        DRIBBBLE_JOINED = DRIBBBLE_JOIN.find('span').string.replace("Member since ", " ")
+                        print(
+                            f"{' ' * 5}└[{G}•{RS}] {C}User Joined Date {Y}:{RS} {DRIBBBLE_JOINED}")
+
+                    if (not DRIBBBLE_PROFILE_PHOTO):
+                        print(f"{' ' * 5}└[{P}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{P}•{RS}] {C}User Profile Photo {Y}:{RS} {DRIBBBLE_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
+
+                    if (not DRIBBBLE_BIO):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Biography {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{R}•{RS}] {C}User Biography {Y}:{RS} {DRIBBBLE_BIO.string}")
+
+                        UserMention_Bio = DRIBBBLE_BIO.string
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = DRIBBBLE_BIO.string
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = DRIBBBLE_BIO.string
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                elif DRIBBBLE_Request.status_code == 404:
+                    print(f"\n[{B} DRIBBBLE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} DRIBBBLE{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} DRIBBBLE{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
+        print(f"\n[{B} DRIBBBLE{RS} ]")
+
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ COMMUNITY CRYPTOMATOR ]
 
-    COMMUNITY_CRYPTOMATOR_Url = f"https://community.cryptomator.org/u/{usernames}/summary"
+    try:
+        ip_address = socket.gethostbyname('community.cryptomator.org')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://community.cryptomator.org", timeout=5)
+            if response.status_code == 200:
+                COMMUNITY_CRYPTOMATOR_Url = f"https://community.cryptomator.org/u/{usernames}/summary"
 
-    COMMUNITY_CRYPTOMATOR_Request = requests.get(COMMUNITY_CRYPTOMATOR_Url)
+                COMMUNITY_CRYPTOMATOR_Request = requests.get(COMMUNITY_CRYPTOMATOR_Url)
 
-    if COMMUNITY_CRYPTOMATOR_Request.status_code == 200:
+                if COMMUNITY_CRYPTOMATOR_Request.status_code == 200:
 
+                    print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_CRYPTOMATOR_Url}")
+
+                    COMMUNITY_CRYPTOMATOR_Soup = BeautifulSoup(COMMUNITY_CRYPTOMATOR_Request.text, "html.parser")
+
+                    COMMUNITY_CRYPTOMATOR_NAME = COMMUNITY_CRYPTOMATOR_Soup.find('div', attrs={'class': 'user-crawler'})
+
+                    COMMUNITY_CRYPTOMATOR_DESCRIPTION = COMMUNITY_CRYPTOMATOR_Soup.find('meta',
+                                                                                        property="og:description")
+
+                    COMMUNITY_CRYPTOMATOR_PHOTO = COMMUNITY_CRYPTOMATOR_Soup.find('meta', property="og:image")
+
+                    if (not COMMUNITY_CRYPTOMATOR_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_CRYPTOMATOR_NAME.find('h2', attrs={'class': 'username'}).getText()}")
+
+                    if (not COMMUNITY_CRYPTOMATOR_DESCRIPTION):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']}")
+
+                        UserMention_Bio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                    if (not COMMUNITY_CRYPTOMATOR_PHOTO):
+                        print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
+
+
+                elif COMMUNITY_CRYPTOMATOR_Request.status_code == 404:
+                    print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_CRYPTOMATOR_Url}")
-
-        COMMUNITY_CRYPTOMATOR_Soup = BeautifulSoup(COMMUNITY_CRYPTOMATOR_Request.text, "html.parser")
-
-        COMMUNITY_CRYPTOMATOR_NAME = COMMUNITY_CRYPTOMATOR_Soup.find('div', attrs={'class': 'user-crawler'})
-
-        COMMUNITY_CRYPTOMATOR_DESCRIPTION = COMMUNITY_CRYPTOMATOR_Soup.find('meta', property="og:description")
-
-        COMMUNITY_CRYPTOMATOR_PHOTO = COMMUNITY_CRYPTOMATOR_Soup.find('meta', property="og:image")
-
-        if (not COMMUNITY_CRYPTOMATOR_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_CRYPTOMATOR_NAME.find('h2', attrs={'class': 'username'}).getText()}")
-
-        if (not COMMUNITY_CRYPTOMATOR_DESCRIPTION):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Description {Y}:{RS} {COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']}")
-
-            UserMention_Bio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = COMMUNITY_CRYPTOMATOR_DESCRIPTION['content']
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-        if (not COMMUNITY_CRYPTOMATOR_PHOTO):
-            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"\n{' ' * 5}└[{G}•{RS}] {C}User Profile Photo {Y}:{RS} {COMMUNITY_CRYPTOMATOR_PHOTO['content']}")
-
-
-    elif COMMUNITY_CRYPTOMATOR_Request.status_code == 404:
-        print(f"\n[{B} COMMUNITY CRYPTOMATOR{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ DEV.TO ]
 
-    DEV_TO_Url = f"https://dev.to/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('dev.to')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://dev.to", timeout=5)
+            if response.status_code == 200:
+                DEV_TO_Url = f"https://dev.to/{usernames}"
 
-    DEV_TO_Request = requests.get(DEV_TO_Url)
+                DEV_TO_Request = requests.get(DEV_TO_Url)
 
-    if DEV_TO_Request.status_code == 200:
+                if DEV_TO_Request.status_code == 200:
 
+                    print(f"\n[{B} DEV.TO{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEV_TO_Url}")
+
+                    DEV_TO_Soup = BeautifulSoup(DEV_TO_Request.text, "html.parser")
+
+                    DEV_TO_NAME = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__details'})
+
+                    DEV_TO_BIO = DEV_TO_Soup.find("meta", property="og:description")
+
+                    DEV_TO_WEBSITE = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__meta'}).find('a').find(
+                        'span')
+
+                    if (not DEV_TO_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEV_TO_NAME.find('h1', attrs={'class': 'crayons-title fw-heavy mb-2'}).getText()}")
+
+                    if (not DEV_TO_BIO):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEV_TO_BIO['content']}")
+
+                        UserMention_Bio = DEV_TO_BIO['content']
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = DEV_TO_BIO['content']
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = DEV_TO_BIO['content']
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+                    if (not DEV_TO_WEBSITE):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        space_remove = DEV_TO_WEBSITE.getText()
+                        After_remove_space = space_remove.strip()
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {After_remove_space}")
+
+                elif DEV_TO_Request.status_code == 404:
+                    print(f"\n[{B} DEV.TO{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} DEV.TO{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} DEV.TO{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} DEV.TO{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEV_TO_Url}")
-
-        DEV_TO_Soup = BeautifulSoup(DEV_TO_Request.text, "html.parser")
-
-        DEV_TO_NAME = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__details'})
-
-        DEV_TO_BIO = DEV_TO_Soup.find("meta", property="og:description")
-
-        DEV_TO_WEBSITE = DEV_TO_Soup.find('div', attrs={'class': 'profile-header__meta'}).find('a').find('span')
-
-        if (not DEV_TO_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEV_TO_NAME.find('h1', attrs={'class': 'crayons-title fw-heavy mb-2'}).getText()}")
-
-        if (not DEV_TO_BIO):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEV_TO_BIO['content']}")
-
-            UserMention_Bio = DEV_TO_BIO['content']
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = DEV_TO_BIO['content']
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = DEV_TO_BIO['content']
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-        if (not DEV_TO_WEBSITE):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            space_remove = DEV_TO_WEBSITE.getText()
-            After_remove_space = space_remove.strip()
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Website {Y}:{RS} {After_remove_space}")
-
-    elif DEV_TO_Request.status_code == 404:
-        print(f"\n[{B} DEV.TO{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ DEVIANTART ]
 
-    DEVIANTART_Url = f"https://www.deviantart.com/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('deviantart.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.deviantart.com", timeout=5)
+            if response.status_code == 200:
+                DEVIANTART_Url = f"https://www.deviantart.com/{usernames}"
 
-    DEVIANTART_Request = requests.get(DEVIANTART_Url)
+                DEVIANTART_Request = requests.get(DEVIANTART_Url)
 
-    if DEVIANTART_Request.status_code == 200:
+                if DEVIANTART_Request.status_code == 200:
 
+                    print(f"\n[{B} DEVIANTART{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEVIANTART_Url}")
+
+                    DEVIANTART_Soup = BeautifulSoup(DEVIANTART_Request.text, "html.parser")
+
+                    DEVIANTART_NAME = DEVIANTART_Soup.find('div', attrs={'class': '_2Ofv6'}).find('div',
+                                                                                                  attrs={
+                                                                                                      'class': '_3oLE7'}).find(
+                        'span', attrs={'class': '_2UI2c'})
+
+                    DEVIANTART_BIO = DEVIANTART_Soup.find('div', attrs={'class': '_2Ofv6'}).find('div',
+                                                                                                 attrs={
+                                                                                                     'class': '_33syq'})
+
+                    if (not DEVIANTART_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEVIANTART_NAME.string}")
+
+                    if (not DEVIANTART_BIO):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEVIANTART_BIO.string}")
+
+                        UserMention_Bio = DEVIANTART_BIO.string
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = DEVIANTART_BIO.string
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = DEVIANTART_BIO.string
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+
+                elif DEVIANTART_Request.status_code == 404:
+                    print(f"\n[{B} DEVIANTART{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} DEVIANTART{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} DEVIANTART{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} DEVIANTART{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DEVIANTART_Url}")
-
-        DEVIANTART_Soup = BeautifulSoup(DEVIANTART_Request.text, "html.parser")
-
-        DEVIANTART_NAME = DEVIANTART_Soup.find('div', attrs={'class': '_2Ofv6'}).find('div',
-                                                                                      attrs={'class': '_3oLE7'}).find(
-            'span', attrs={'class': '_2UI2c'})
-
-        DEVIANTART_BIO = DEVIANTART_Soup.find('div', attrs={'class': '_2Ofv6'}).find('div', attrs={'class': '_33syq'})
-
-        if (not DEVIANTART_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DEVIANTART_NAME.string}")
-
-        if (not DEVIANTART_BIO):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {DEVIANTART_BIO.string}")
-
-            UserMention_Bio = DEVIANTART_BIO.string
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = DEVIANTART_BIO.string
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = DEVIANTART_BIO.string
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-
-    elif DEVIANTART_Request.status_code == 404:
-        print(f"\n[{B} DEVIANTART{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ EGPU ]
 
-    EGPU_Url = f"http://egpu.io/forums/profile/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('egpu.io')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("http://egpu.io", timeout=5)
+            if response.status_code == 200:
+                EGPU_Url = f"http://egpu.io/forums/profile/{usernames}/"
 
-    EGPU_Request = requests.get(EGPU_Url)
+                EGPU_Request = requests.get(EGPU_Url)
 
-    if EGPU_Request.status_code == 200:
+                if EGPU_Request.status_code == 200:
 
+                    print(f"\n[{B} EGPU{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EGPU_Url}")
+
+                    EGPU_Soup = BeautifulSoup(EGPU_Request.text, "html.parser")
+
+                    EGPU_NAME = EGPU_Soup.find('div', attrs={'class': 'wpf-breadcrumb'}).find('div', attrs={
+                        'class': 'wpf-item-element active'})
+
+                    if (not EGPU_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EGPU_NAME.string}")
+
+                elif EGPU_Request.status_code == 404:
+                    print(f"\n[{B} EGPU{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} EGPU{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} EGPU{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} EGPU{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EGPU_Url}")
-
-        EGPU_Soup = BeautifulSoup(EGPU_Request.text, "html.parser")
-
-        EGPU_NAME = EGPU_Soup.find('div', attrs={'class': 'wpf-breadcrumb'}).find('div', attrs={
-            'class': 'wpf-item-element active'})
-
-        if (not EGPU_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EGPU_NAME.string}")
-
-    elif EGPU_Request.status_code == 404:
-        print(f"\n[{B} EGPU{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ COMMUNITY EINTRACHT ]
 
-    COMMUNITY_EINTRACHT_Url = f"https://community.eintracht.de/fans/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('community.eintracht.de')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://community.eintracht.de", timeout=5)
+            if response.status_code == 200:
+                COMMUNITY_EINTRACHT_Url = f"https://community.eintracht.de/fans/{usernames}"
 
-    COMMUNITY_EINTRACHT_Request = requests.get(COMMUNITY_EINTRACHT_Url)
+                COMMUNITY_EINTRACHT_Request = requests.get(COMMUNITY_EINTRACHT_Url)
 
-    if COMMUNITY_EINTRACHT_Request.status_code == 200:
+                if COMMUNITY_EINTRACHT_Request.status_code == 200:
 
+                    print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_EINTRACHT_Url}")
+
+                    COMMUNITY_EINTRACHT_Soup = BeautifulSoup(COMMUNITY_EINTRACHT_Request.text,
+                                                             "html.parser")
+
+                    COMMUNITY_EINTRACHT_NAME = COMMUNITY_EINTRACHT_Soup.find('div', attrs={'class': 'page-header'})
+
+                    if (not COMMUNITY_EINTRACHT_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_EINTRACHT_NAME.string}")
+
+                elif COMMUNITY_EINTRACHT_Request.status_code == 404:
+                    print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {COMMUNITY_EINTRACHT_Url}")
-
-        COMMUNITY_EINTRACHT_Soup = BeautifulSoup(COMMUNITY_EINTRACHT_Request.text,
-                                                 "html.parser")
-
-        COMMUNITY_EINTRACHT_NAME = COMMUNITY_EINTRACHT_Soup.find('div', attrs={'class': 'page-header'})
-
-        if (not COMMUNITY_EINTRACHT_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {COMMUNITY_EINTRACHT_NAME.string}")
-
-    elif COMMUNITY_EINTRACHT_Request.status_code == 404:
-        print(f"\n[{B} COMMUNITY EINTRACHT{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ HACKSTER.IO ]
 
-    HACKSTER_IO_Url = f"https://www.hackster.io/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('hackster.io')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.hackster.io", timeout=5)
+            if response.status_code == 200:
+                HACKSTER_IO_Url = f"https://www.hackster.io/{usernames}"
 
-    HACKSTER_IO_Request = requests.get(HACKSTER_IO_Url)
+                HACKSTER_IO_Request = requests.get(HACKSTER_IO_Url)
 
-    if HACKSTER_IO_Request.status_code == 200:
+                if HACKSTER_IO_Request.status_code == 200:
 
+                    print(f"\n[{B} HACKSTER IO{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKSTER_IO_Url}")
+
+                    HACKSTER_IO_Soup = BeautifulSoup(HACKSTER_IO_Request.text, "html.parser")
+
+                    HACKSTER_IO_NAME = HACKSTER_IO_Soup.find('div', attrs={'class': 'user_card__userInfo__wid7E'})
+
+                    if (not HACKSTER_IO_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKSTER_IO_NAME.find('h1', attrs={'class': 'user_card__name__1QI2z'}).string}")
+
+                elif HACKSTER_IO_Request.status_code == 404:
+                    print(f"\n[{B} HACKSTER IO{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} HACKSTER IO{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} HACKSTER IO{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} HACKSTER IO{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {HACKSTER_IO_Url}")
-
-        HACKSTER_IO_Soup = BeautifulSoup(HACKSTER_IO_Request.text, "html.parser")
-
-        HACKSTER_IO_NAME = HACKSTER_IO_Soup.find('div', attrs={'class': 'user_card__userInfo__wid7E'})
-
-        if (not HACKSTER_IO_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {HACKSTER_IO_NAME.find('h1', attrs={'class': 'user_card__name__1QI2z'}).string}")
-
-    elif HACKSTER_IO_Request.status_code == 404:
-        print(f"\n[{B} HACKSTER IO{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ SATSIS_INFO ]
 
-    SATSIS_INFO_Url = f"https://satsis.info/user/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('satsis.info')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://satsis.info", timeout=5)
+            if response.status_code == 200:
+                SATSIS_INFO_Url = f"https://satsis.info/user/{usernames}"
 
-    SATSIS_INFO_Request = requests.get(SATSIS_INFO_Url)
+                SATSIS_INFO_Request = requests.get(SATSIS_INFO_Url)
 
-    if SATSIS_INFO_Request.status_code == 200:
+                if SATSIS_INFO_Request.status_code == 200:
 
+                    print(f"\n[{B} SATSIS INFO{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SATSIS_INFO_Url}")
+
+                    SATSIS_INFO_Soup = BeautifulSoup(SATSIS_INFO_Request.text, "html.parser")
+
+                    SATSIS_INFO_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[0]
+
+                    REGISTRATION_DATE_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[2]
+
+                    LAST_VISITED = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[3]
+
+                    if (not SATSIS_INFO_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SATSIS_INFO_NAME.find_all_next('b')[0].getText()}")
+
+                    if (not REGISTRATION_DATE_NAME):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {REGISTRATION_DATE_NAME.find_all_next('b')[0].getText()}")
+
+                    if (not LAST_VISITED):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {LAST_VISITED.find_all_next('b')[0].getText()}")
+
+                elif SATSIS_INFO_Request.status_code == 404:
+                    print(f"\n[{B} SATSIS INFO{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} SATSIS INFO{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} SATSIS INFO{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} SATSIS INFO{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SATSIS_INFO_Url}")
-
-        SATSIS_INFO_Soup = BeautifulSoup(SATSIS_INFO_Request.text, "html.parser")
-
-        SATSIS_INFO_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[0]
-
-        REGISTRATION_DATE_NAME = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[2]
-
-        LAST_VISITED = SATSIS_INFO_Soup.find('div', attrs={'class': 'rcol'}).find_all('li')[3]
-
-        if (not SATSIS_INFO_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SATSIS_INFO_NAME.find_all_next('b')[0].getText()}")
-
-        if (not REGISTRATION_DATE_NAME):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Registration Date {Y}:{RS} {REGISTRATION_DATE_NAME.find_all_next('b')[0].getText()}")
-
-        if (not LAST_VISITED):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Last Visited {Y}:{RS} {LAST_VISITED.find_all_next('b')[0].getText()}")
-
-
-    elif SATSIS_INFO_Request.status_code == 404:
-        print(f"\n[{B} SATSIS INFO{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ SESSIONIZE ]
 
-    SESSIONIZE_Url = f"https://sessionize.com/{usernames}/"
+    try:
+        ip_address = socket.gethostbyname('sessionize.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://sessionize.com", timeout=5)
+            if response.status_code == 200:
+                SESSIONIZE_Url = f"https://sessionize.com/{usernames}/"
 
-    SESSIONIZE_Request = requests.get(SESSIONIZE_Url)
+                SESSIONIZE_Request = requests.get(SESSIONIZE_Url)
 
-    if SESSIONIZE_Request.status_code == 200:
+                if SESSIONIZE_Request.status_code == 200:
 
+                    print(f"\n[{B} SESSIONIZE{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SESSIONIZE_Url}")
+
+                    SESSIONIZE_Soup = BeautifulSoup(SESSIONIZE_Request.text, "html.parser")
+
+                    PROFILE_IS_PRIVATE = SESSIONIZE_Soup.find('div', attrs={'class': 'panel-body'})
+
+                    SESSIONIZE_NAME = SESSIONIZE_Soup.find('div',
+                                                           attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+                    SESSIONIZE_ADDRESS = SESSIONIZE_Soup.find('div',
+                                                              attrs={
+                                                                  'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+                    SESSIONIZE_TAGLINE = SESSIONIZE_Soup.find('div',
+                                                              attrs={
+                                                                  'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+                    SESSIONIZE_PROFILE_PHOTO = SESSIONIZE_Soup.find('div',
+                                                                    attrs={
+                                                                        'class': 'c-s-speaker-info c-s-speaker-info--full'})
+
+                    if (not PROFILE_IS_PRIVATE):
+
+                        if (not SESSIONIZE_NAME):
+                            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SESSIONIZE_NAME.find('h1', attrs={'class': 'c-s-speaker-info__name'}).string}")
+                        if (not SESSIONIZE_PROFILE_PHOTO):
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {SESSIONIZE_PROFILE_PHOTO.find('figure', attrs={'class': 'c-s-speaker-info__avatar'}).findAll('img')[0].attrs['src']}")
+
+                        if (not SESSIONIZE_TAGLINE):
+                            print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            print(
+                                f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {SESSIONIZE_TAGLINE.find('p', attrs={'class': 'c-s-speaker-info__tagline'}).string}")
+
+                        if (not SESSIONIZE_ADDRESS):
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            TEXT_TO_SPACE_REMOVE = SESSIONIZE_ADDRESS.find('p',
+                                                                           attrs={
+                                                                               'class': 'c-s-speaker-info__location'}).getText()
+                            After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
+                            print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {After_remove_seeking_space}")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Account {Y}:{RS} [ {R}{PROFILE_IS_PRIVATE.find('h3').getText()}{RS} ] {RS}")
+
+                elif SESSIONIZE_Request.status_code == 404:
+                    print(f"\n[{B} SESSIONIZE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+            else:
+                print(f"\n[{B} SESSIONIZE{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} SESSIONIZE{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} SESSIONIZE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {SESSIONIZE_Url}")
-
-        SESSIONIZE_Soup = BeautifulSoup(SESSIONIZE_Request.text, "html.parser")
-
-        PROFILE_IS_PRIVATE = SESSIONIZE_Soup.find('div', attrs={'class': 'panel-body'})
-
-        SESSIONIZE_NAME = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
-
-        SESSIONIZE_ADDRESS = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
-
-        SESSIONIZE_TAGLINE = SESSIONIZE_Soup.find('div', attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
-
-        SESSIONIZE_PROFILE_PHOTO = SESSIONIZE_Soup.find('div',
-                                                        attrs={'class': 'c-s-speaker-info c-s-speaker-info--full'})
-
-        if (not PROFILE_IS_PRIVATE):
-
-            if (not SESSIONIZE_NAME):
-                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(
-                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {SESSIONIZE_NAME.find('h1', attrs={'class': 'c-s-speaker-info__name'}).string}")
-            if (not SESSIONIZE_PROFILE_PHOTO):
-                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(
-                    f"{' ' * 5}└[{Y}•{RS}] {C}User Profile Photo {Y}:{RS} {SESSIONIZE_PROFILE_PHOTO.find('figure', attrs={'class': 'c-s-speaker-info__avatar'}).findAll('img')[0].attrs['src']}")
-
-            if (not SESSIONIZE_TAGLINE):
-                print(f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                print(
-                    f"{' ' * 5}└[{G}•{RS}] {C}User Profile TagLine {Y}:{RS} {SESSIONIZE_TAGLINE.find('p', attrs={'class': 'c-s-speaker-info__tagline'}).string}")
-
-            if (not SESSIONIZE_ADDRESS):
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                TEXT_TO_SPACE_REMOVE = SESSIONIZE_ADDRESS.find('p',
-                                                               attrs={'class': 'c-s-speaker-info__location'}).getText()
-                After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
-                print(f"{' ' * 5}└[{R}•{RS}] {C}User Location {Y}:{RS} {After_remove_seeking_space}")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Account {Y}:{RS} [ {R}{PROFILE_IS_PRIVATE.find('h3').getText()}{RS} ] {RS}")
-
-
-    elif SESSIONIZE_Request.status_code == 404:
-        print(f"\n[{B} SESSIONIZE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
-
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ CLUBHOUSE ]
 
-    CLUBHOUSE_Url = f"https://www.clubhouse.com/@{usernames}"
+    try:
+        ip_address = socket.gethostbyname('clubhouse.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.clubhouse.com", timeout=5)
+            if response.status_code == 200:
+                CLUBHOUSE_Url = f"https://www.clubhouse.com/@{usernames}"
 
-    CLUBHOUSE_Request = requests.get(CLUBHOUSE_Url)
+                CLUBHOUSE_Request = requests.get(CLUBHOUSE_Url)
 
-    if CLUBHOUSE_Request.status_code == 200:
+                if CLUBHOUSE_Request.status_code == 200:
 
+                    print(f"\n[{B} CLUBHOUSE{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CLUBHOUSE_Url}")
+
+                    CLUBHOUSE_Soup = BeautifulSoup(CLUBHOUSE_Request.text, "html.parser")
+
+                    PROFILE_NAME = CLUBHOUSE_Soup.find('p', attrs={'class': 'Text-sc-12iul02-0 qEvAJ'})
+
+                    FOLLOWER_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
+                        'class': 'Box-sc-jpzo4c-0 bVSHve'}).find('p', attrs={
+                        'class': 'Text-sc-12iul02-0 kRCqoT'})
+
+                    FOLLOWING_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
+                        'class': 'Box-sc-jpzo4c-0 hCFXoz'}).find('p', attrs={
+                        'class': 'Text-sc-12iul02-0 kRCqoT'})
+
+                    PROFILE_BIO = CLUBHOUSE_Soup.find('div',
+                                                      attrs={'class': 'mt-5 sm:mt-4 text-sm sm:text-md text-gray-800'})
+
+                    if (not PROFILE_NAME):
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {PROFILE_NAME.string}")
+
+                    if (not FOLLOWER_PROFILE):
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {FOLLOWER_PROFILE.string}")
+
+                    if (not FOLLOWING_PROFILE):
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        print(
+                            f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {FOLLOWING_PROFILE.string}")
+
+                    if (not PROFILE_BIO):
+                        print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                    else:
+                        TEXT_TO_SPACE_REMOVE = PROFILE_BIO.getText()
+                        After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
+                        print(
+                            f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
+
+                        UserMention_Bio = After_remove_seeking_space
+
+                        Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                        print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                        if (not Mention_Bio):
+                            print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                            for Mention_Bios in Mention_Bio:
+                                count += 1
+                                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                        UserEmail = After_remove_seeking_space
+
+                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                        if (not emails):
+                            print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                        else:
+                            count = 0
+                        for email in emails:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
+
+                        print(f"{' ' * 5}└[{G}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
+
+                        PhoneNumberbio = After_remove_seeking_space
+
+                        PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
+
+                        if (not PhoneNumbers):
+                            print(
+                                f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                        else:
+                            count = 0
+                        for PhoneNumber in PhoneNumbers:
+                            count += 1
+                            print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+
+
+                elif CLUBHOUSE_Request.status_code == 404:
+                    print(f"\n[{B} CLUBHOUSE{RS} ]")
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} CLUBHOUSE{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} CLUBHOUSE{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
         print(f"\n[{B} CLUBHOUSE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {CLUBHOUSE_Url}")
-
-        CLUBHOUSE_Soup = BeautifulSoup(CLUBHOUSE_Request.text, "html.parser")
-
-        PROFILE_NAME = CLUBHOUSE_Soup.find('p', attrs={'class': 'Text-sc-12iul02-0 qEvAJ'})
-
-        FOLLOWER_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
-            'class': 'Box-sc-jpzo4c-0 bVSHve'}).find('p', attrs={
-            'class': 'Text-sc-12iul02-0 kRCqoT'})
-
-        FOLLOWING_PROFILE = CLUBHOUSE_Soup.find('div', attrs={
-            'class': 'Box-sc-jpzo4c-0 hCFXoz'}).find('p', attrs={
-            'class': 'Text-sc-12iul02-0 kRCqoT'})
-
-        PROFILE_BIO = CLUBHOUSE_Soup.find('div', attrs={'class': 'mt-5 sm:mt-4 text-sm sm:text-md text-gray-800'})
-
-        if (not PROFILE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {PROFILE_NAME.string}")
-
-        if (not FOLLOWER_PROFILE):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Followers {Y}:{RS} {FOLLOWER_PROFILE.string}")
-
-        if (not FOLLOWING_PROFILE):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{G}•{RS}] {C}User Following {Y}:{RS} {FOLLOWING_PROFILE.string}")
-
-        if (not PROFILE_BIO):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            TEXT_TO_SPACE_REMOVE = PROFILE_BIO.getText()
-            After_remove_seeking_space = TEXT_TO_SPACE_REMOVE.strip()
-            print(
-                f"{' ' * 5}└[{R}•{RS}] {C}User Bio {Y}:{RS} {After_remove_seeking_space}")
-
-            UserMention_Bio = After_remove_seeking_space
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 20}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = After_remove_seeking_space
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{G}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = After_remove_seeking_space
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 20}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-
-    elif CLUBHOUSE_Request.status_code == 404:
-        print(f"\n[{B} CLUBHOUSE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ CONTENTLY ]
 
@@ -2484,7 +3511,7 @@ def Username_input(usernames):
 
     elif CONTENTLY_Request.status_code == 404:
         print(f"\n[{B} CONTENTLY{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ DISCOGS ]
 
@@ -2511,7 +3538,7 @@ def Username_input(usernames):
 
     elif DISCOGS_Request.status_code == 404:
         print(f"\n[{B} DISCOGS{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ DOCKER ]
 
@@ -2578,196 +3605,101 @@ def Username_input(usernames):
         else:
             print(
                 f"{' ' * 5}└[{R}•{RS}] {C}User Type {Y}:{RS} {docker_json['type']}")
-    # [ DRIBBBLE ]
-
-    DRIBBBLE_Url = f"https://dribbble.com/{usernames}/about"
-
-    DRIBBBLE_Request = requests.get(DRIBBBLE_Url)
-
-    if DRIBBBLE_Request.status_code == 200:
-
-        print(f"\n[{B} DRIBBBLE{RS} ]")
-
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {DRIBBBLE_Url}")
-
-        DRIBBBLE_Soup = BeautifulSoup(DRIBBBLE_Request.text, "html.parser")
-
-        DRIBBBLE_NAME = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-content'}).find('h1', attrs={
-            'class': 'masthead-profile-name'})
-
-        DRIBBBLE_ADDRESS = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-content'}).find('p', attrs={
-            'class': 'masthead-profile-locality'})
-
-        DRIBBBLE_JOIN = DRIBBBLE_Soup.find('div', attrs={'class': 'about-content-main'}).find('p', attrs={
-            'class': 'info-item created'})
-
-        DRIBBBLE_BIO = DRIBBBLE_Soup.find('div', attrs={'class': 'about-content-main'}).find('p', attrs={
-            'class': 'empty-bio'})
-
-        DRIBBBLE_PROFILE_PHOTO = DRIBBBLE_Soup.find('div', attrs={'class': 'masthead-avatar'})
-
-        if (not DRIBBBLE_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {DRIBBBLE_NAME.string}")
-
-        if (not DRIBBBLE_ADDRESS):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Location {Y}:{RS} {DRIBBBLE_ADDRESS.string}")
-
-        if (not DRIBBBLE_JOIN):
-            print(f"{' ' * 5}└[{G}•{RS}] {C}User Joined Date {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            DRIBBBLE_JOINED = DRIBBBLE_JOIN.find('span').string.replace("Member since ", " ")
-            print(
-                f"{' ' * 5}└[{G}•{RS}] {C}User Joined Date {Y}:{RS} {DRIBBBLE_JOINED}")
-
-        if (not DRIBBBLE_PROFILE_PHOTO):
-            print(f"{' ' * 5}└[{P}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{P}•{RS}] {C}User Profile Photo {Y}:{RS} {DRIBBBLE_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
-
-        if (not DRIBBBLE_BIO):
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Biography {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{R}•{RS}] {C}User Biography {Y}:{RS} {DRIBBBLE_BIO.string}")
-
-            UserMention_Bio = DRIBBBLE_BIO.string
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
-                    count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
-
-            UserEmail = DRIBBBLE_BIO.string
-
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
-
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
-
-            if (not emails):
-                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = DRIBBBLE_BIO.string
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
-
-    elif DRIBBBLE_Request.status_code == 404:
-        print(f"\n[{B} DRIBBBLE{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
 
     # [ EYEEM ]
 
-    EYEEM_Url = f"https://www.eyeem.com/u/{usernames}"
+    try:
+        ip_address = socket.gethostbyname('eyeem.com')
 
-    EYEEM_Request = requests.get(EYEEM_Url)
+        EYEEM_Url = f"https://www.eyeem.com/u/{usernames}"
 
-    if EYEEM_Request.status_code == 200:
+        EYEEM_Request = requests.get(EYEEM_Url)
 
-        print(f"\n[{B} EYEEM{RS} ]")
+        if EYEEM_Request.status_code == 200:
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EYEEM_Url}")
+            print(f"\n[{B} EYEEM{RS} ]")
 
-        EYEEM_Soup = BeautifulSoup(EYEEM_Request.text, "html.parser")
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {EYEEM_Url}")
 
-        EYEEM_NAME = EYEEM_Soup.find('div', attrs={'class': 'css-64wcgg'}).find('h1',
-                                                                                attrs={'class': 'css-a88me eulhdfc0'})
+            EYEEM_Soup = BeautifulSoup(EYEEM_Request.text, "html.parser")
 
-        EYEEM_BIO = EYEEM_Soup.find('div', attrs={'class': 'css-1mpr9jb eqclr3s0'})
+            EYEEM_NAME = EYEEM_Soup.find('div', attrs={'class': 'css-64wcgg'}).find('h1',
+                                                                                    attrs={
+                                                                                        'class': 'css-a88me eulhdfc0'})
 
-        EYEEM_PROFILE_PHOTO = EYEEM_Soup.find('div', attrs={'class': 'css-kx2m0z'})
+            EYEEM_BIO = EYEEM_Soup.find('div', attrs={'class': 'css-1mpr9jb eqclr3s0'})
 
-        if (not EYEEM_NAME):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EYEEM_NAME.string}")
+            EYEEM_PROFILE_PHOTO = EYEEM_Soup.find('div', attrs={'class': 'css-kx2m0z'})
 
-        if (not EYEEM_PROFILE_PHOTO):
-            print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {EYEEM_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
-
-        if (not EYEEM_BIO):
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-        else:
-            print(
-                f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string}")
-
-            UserMention_Bio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
-
-            Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
-
-            print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
-
-            if (not Mention_Bio):
-                print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+            if (not EYEEM_NAME):
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {R}Not Found ❗️{RS} ")
             else:
-                count = 0
-                for Mention_Bios in Mention_Bio:
+                print(
+                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Name {Y}:{RS} {EYEEM_NAME.string}")
+
+            if (not EYEEM_PROFILE_PHOTO):
+                print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{B}•{RS}] {C}User Profile Photo {Y}:{RS} {EYEEM_PROFILE_PHOTO.find_all('img')[0].attrs['src']}")
+
+            if (not EYEEM_BIO):
+                print(f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+            else:
+                print(
+                    f"{' ' * 5}└[{Y}•{RS}] {C}User Bio {Y}:{RS} {EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string}")
+
+                UserMention_Bio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+
+                Mention_Bio = re.findall(r"@[A-Za-z0-9.-]+", UserMention_Bio)
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}List Of People Mention On USER Bio{Y}:{RS}")
+
+                if (not Mention_Bio):
+                    print(f"{' ' * 10}└[{R}•{RS}] {Y}Mention Pople {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                else:
+                    count = 0
+                    for Mention_Bios in Mention_Bio:
+                        count += 1
+                        print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+
+                UserEmail = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+
+                emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+
+                print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+
+                if (not emails):
+                    print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
+                else:
+                    count = 0
+                for email in emails:
                     count += 1
-                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {Mention_Bios}")
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
 
-            UserEmail = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
+                print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
 
-            emails = re.findall(r'[\w\.-]+@[\w\.-]+', UserEmail)
+                PhoneNumberbio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
 
-            print(f"{' ' * 5}└[{B}•{RS}] {C}List Of Email Write On USER Bio{Y}:{RS}")
+                PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
 
-            if (not emails):
-                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}Email {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} \n")
-            else:
-                count = 0
-            for email in emails:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {email}")
-
-            print(f"{' ' * 5}└[{Y}•{RS}] {C}List Of PhoneNumber Or Any Digit On USER Bio{Y}:{RS}")
-
-            PhoneNumberbio = EYEEM_BIO.find('span', attrs={'class': 'css-1yzq2te eulhdfc0'}).string
-
-            PhoneNumbers = re.findall(r'\d+', PhoneNumberbio)
-
-            if (not PhoneNumbers):
-                print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
-            else:
-                count = 0
-            for PhoneNumber in PhoneNumbers:
-                count += 1
-                print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
+                if (not PhoneNumbers):
+                    print(f"{' ' * 10}└[{R}•{RS}] {C}Find {Y}PhoneNumber {C}On Bio {Y}:{RS} {R}Not Found ❗️{RS} ")
+                else:
+                    count = 0
+                for PhoneNumber in PhoneNumbers:
+                    count += 1
+                    print(f"{' ' * 20}└[{R}{count}{RS}] {G}►{RS} {PhoneNumber}")
 
 
-    elif EYEEM_Request.status_code == 404:
+        elif EYEEM_Request.status_code == 404:
+            print(f"\n[{B} EYEEM{RS} ]")
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+    except socket.gaierror:
         print(f"\n[{B} EYEEM{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     # [ FANDOM ]
 
@@ -2854,7 +3786,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} FANDOM{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ FLIGHTRADAR24 ]
 
@@ -2888,7 +3820,7 @@ def Username_input(usernames):
 
     elif FLIGHTRADAR24_Request.status_code == 404:
         print(f"\n[{B} FLIGHTRADAR24{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ GITEE ]
 
@@ -2926,7 +3858,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} GITEE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ PLUGINS.GRADLE ]
 
@@ -2964,7 +3896,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} PLUGINS_GRADLE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ HACKADAY ]
 
@@ -3001,7 +3933,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} HACKADAY{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ HACKEREARTH ]
 
@@ -3026,7 +3958,7 @@ def Username_input(usernames):
 
     elif HACKEREARTH_RESPONSE.status_code == 400:
         print(f"\n[{B} HACKEREARTH{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ NEWS_YCOMBINATOR ]
 
@@ -3042,7 +3974,7 @@ def Username_input(usernames):
 
             print(f"\n[{B} NEWS YCOMBINATOR{RS} ]")
 
-            print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+            print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
         else:
 
             NEWS_YCOMBINATOR_NAME = NEWS_YCOMBINATOR_Soup.find('tr', attrs={'class': 'athing'})
@@ -3145,7 +4077,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} HACKERONE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ HACKERRANK ]
 
@@ -3163,7 +4095,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} HACKERRANK{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info {Y}:{RS} {R}Not Found ❗️{RS} ")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     elif HACKERRANK_JSON['type'] == 'hacker':
 
@@ -3265,7 +4197,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} HASHNODE{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ HUBPAGES ]
 
@@ -3353,7 +4285,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} HUBPAGES{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ IFTTT ]
 
@@ -3394,7 +4326,64 @@ def Username_input(usernames):
 
         print(f"\n[{B} IFTTT{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+    # [ INSTRUCTABLES ]
+
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33',
+    }
+
+    INSTRUCTABLES_URL = f"https://www.instructables.com/json-api/showAuthorStats?screenName={usernames}"
+
+    INSTRUCTABLES_RESPONSE = requests.request("GET", INSTRUCTABLES_URL, headers=headers)
+
+    if INSTRUCTABLES_RESPONSE.status_code == 200:
+
+        INSTRUCTABLES_JSON = json.loads(INSTRUCTABLES_RESPONSE.content)
+
+        print(f"\n[{B} INSTRUCTABLES{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {INSTRUCTABLES_URL}")
+
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile UserName {Y}:{RS} {usernames}{RS}")
+
+        print(f"{' ' * 5}└[{Y}•{RS}] {C}User comment Count {Y}:{RS} {INSTRUCTABLES_JSON.get('commentCount')}{RS}")
+
+        print(f"{' ' * 5}└[{G}•{RS}] {C}User Views {Y}:{RS} {INSTRUCTABLES_JSON.get('views')}{RS}")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Featured Count {Y}:{RS} {INSTRUCTABLES_JSON.get('featuredCount')}{RS}")
+
+        print(f"{' ' * 5}└[{B}•{RS}] {C}User Favorites Count {Y}:{RS} {INSTRUCTABLES_JSON.get('favoritesCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{Y}•{RS}] {C}User Instructables Count {Y}:{RS} {INSTRUCTABLES_JSON.get('instructablesCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{G}•{RS}] {C}User Published Collections Count {Y}:{RS} {INSTRUCTABLES_JSON.get('publishedCollectionsCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{P}•{RS}] {C}User Published Project Count {Y}:{RS} {INSTRUCTABLES_JSON.get('publishedProjectCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}User Quarantined Project Count {Y}:{RS} {INSTRUCTABLES_JSON.get('quarantinedProjectCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{B}•{RS}] {C}User Limboed Project Count {Y}:{RS} {INSTRUCTABLES_JSON.get('limboedProjectCount')}{RS}")
+
+        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Followers Count {Y}:{RS} {INSTRUCTABLES_JSON.get('followersCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{G}•{RS}] {C}User Subscriptions Count {Y}:{RS} {INSTRUCTABLES_JSON.get('subscriptionsCount')}{RS}")
+
+        print(
+            f"{' ' * 5}└[{P}•{RS}] {C}User Collaborations Count {Y}:{RS} {INSTRUCTABLES_JSON.get('collaborationsCount')}{RS}")
+
+    elif INSTRUCTABLES_RESPONSE.status_code == 404:
+
+        print(f"\n[{B} INSTRUCTABLES{RS} ]")
+
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
@@ -3611,7 +4600,7 @@ def Username_input(usernames):
 
     elif xvideos_Request.status_code == 404:
         print(f"\n[{B} X VIDEOS{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
 
     # [ X HAMSTER ]
 
@@ -3871,4 +4860,4 @@ def Username_input(usernames):
 
     elif XHAMSTER_Request.status_code == 404:
         print(f"\n[{B} X HAMSTER{RS} ]")
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Not Found ❗️{RS}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
