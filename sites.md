@@ -62,4 +62,4 @@
 60. [HUBPAGES](https://hubpages.com/) ![](https://www.google.com/s2/favicons?domain=https://hubpages.com/)
 61. [HUBPAGES](https://ifttt.com/) ![](https://www.google.com/s2/favicons?domain=https://ifttt.com/)
 62. [INSTRUCTABLES](https://www.instructables.com/) ![](https://www.google.com/s2/favicons?domain=https://www.instructables.com/)
-63. [INTIGRITI](https://www.intigriti.com/) ![](https://www.google.com/s2/favicons?domain=https://www.intigriti.com/) 
+63. [INTIGRITI](https://www.intigriti.com/) ![](https://www.google.com/s2/favicons?domain=https://www.intigriti.com/)
