@@ -4344,7 +4344,7 @@ def Username_input(usernames):
 
         print(f"\n[{B} INSTRUCTABLES{RS} ]")
 
-        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} {INSTRUCTABLES_URL}")
+        print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} https://www.instructables.com/member/{usernames}")
 
         print(f"{' ' * 5}└[{B}•{RS}] {C}User Profile UserName {Y}:{RS} {usernames}{RS}")
 
@@ -4384,6 +4384,101 @@ def Username_input(usernames):
         print(f"\n[{B} INSTRUCTABLES{RS} ]")
 
         print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+    # [ INTIGRITI ]
+
+    try:
+        ip_address = socket.gethostbyname('intigriti.com')
+        # print('IP address:', ip_address)
+        try:
+            response = requests.get("https://www.intigriti.com", timeout=7)
+            if response.status_code == 200:
+
+                INTIGRITI_url = f"https://api.intigriti.com/user/public/profile/{usernames}"
+
+                INTIGRITI_headers = {
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.33'}
+
+                INTIGRITI_response = requests.request("GET", INTIGRITI_url, headers=INTIGRITI_headers)
+
+                if INTIGRITI_response.status_code == 200:
+
+                    INTIGRITI_json = json.loads(INTIGRITI_response.content)
+
+                    print(INTIGRITI_json)
+
+                    print(f"\n[{B} INTIGRITI{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Url{Y}:{RS} https://app.intigriti.com/profile/{usernames}")
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}UserName{Y}:{RS} {usernames}")
+
+                    if 'avatarId' in INTIGRITI_json and INTIGRITI_json['avatarId'] is not None:
+                        photo_url = f"https://api.intigriti.com/file/api/file/{INTIGRITI_json['avatarId']}"
+                        response = requests.get(photo_url)
+                        if response.status_code == 200:
+                            with open(f"./../../Result/media/{usernames}.jpg", "wb") as f:
+                                f.write(response.content)
+                            print(
+                                f"{' ' * 5}└[{Y}•{RS}] {C}User Avatar{Y}:{RS} https://api.intigriti.com/file/api/file/{INTIGRITI_json.get('avatarId')} {R}[ {G}Downloaded Successfully!{RS} uosint/Result/media {R}]")
+                        else:
+                            print(f"{' ' * 5}└[{Y}•{RS}] {C}User Avatar{Y}:{RS} No Photo Found For This User.")
+                    else:
+                        print(f"{' ' * 5}└[{Y}•{RS}] {C}User Avatar{Y}:{RS} No Photo Found For This User.")
+
+                    print(f"{' ' * 5}└[{G}•{RS}] {C}User Reputation{Y}:{RS} {INTIGRITI_json.get('reputation')}")
+
+                    print(f"{' ' * 5}└[{P}•{RS}] {C}User Rank{Y}:{RS} {INTIGRITI_json.get('rank')}")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Streak{Y}:{RS} {INTIGRITI_json.get('streak')}")
+
+                    print(
+                        f"{' ' * 5}└[{B}•{RS}] {C}User StreakReputation{Y}:{RS} {INTIGRITI_json.get('streakReputation')}")
+
+                    print(
+                        f"{' ' * 5}└[{Y}•{RS}] {C}User Identity Checked{Y}:{RS} {INTIGRITI_json.get('identityChecked')}")
+
+                    print(f"{' ' * 5}└[{G}•{RS}] {C}User Id{Y}:{RS} {INTIGRITI_json.get('userId')}")
+
+                    print(f"{' ' * 5}└[{P}•{RS}] {C}User Country{Y}:{RS} {INTIGRITI_json.get('country')}")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Website{Y}:{RS} {INTIGRITI_json.get('website')}")
+
+                    print(f"{' ' * 5}└[{B}•{RS}] {C}User LinkedIn{Y}:{RS} {INTIGRITI_json.get('linkedIn')}")
+
+                    print(f"{' ' * 5}└[{Y}•{RS}] {C}User Twitter{Y}:{RS} {INTIGRITI_json.get('twitter')}")
+
+                    print(
+                        f"{' ' * 5}└[{G}•{RS}] {C}User Total Submissions{Y}:{RS} {INTIGRITI_json.get('totalSubmissions')}")
+
+                    print(
+                        f"{' ' * 5}└[{P}•{RS}] {C}User Accepted Submissions{Y}:{RS} {INTIGRITI_json.get('acceptedSubmissions')}")
+
+                    print(
+                        f"{' ' * 5}└[{R}•{RS}] {C}User Rejected Submissions{Y}:{RS} {INTIGRITI_json.get('rejectedSubmissions')}")
+
+                    print(
+                        f"{' ' * 5}└[{B}•{RS}] {C}User Valid Submission Ratio{Y}:{RS} {INTIGRITI_json.get('validSubmissionRatio')}")
+
+                elif INTIGRITI_response.status_code == 404:
+
+                    print(f"\n[{B} INTIGRITI{RS} ]")
+
+                    print(f"{' ' * 5}└[{R}•{RS}] {C}User Info{Y}:{RS} {R}Sorry, we couldn't find that one ❗️{RS}")
+
+            else:
+                print(f"\n[{B} INTIGRITI{RS} ]")
+
+                print(f"{' ' * 5}└[{R}•{RS}] {C}Connection Lost{Y}:{RS} {R}Oops! Unable To Establish A Connection{RS}")
+        except requests.exceptions.Timeout:
+            print(f"\n[{B} INTIGRITI{RS} ]")
+
+            print(f"{' ' * 5}└[{R}•{RS}] {C}Timeout Error{Y}:{RS} {R}Oops! Timed Out{RS}")
+    except socket.gaierror:
+        print(f"\n[{B} INTIGRITI{RS} ]")
+
+        print(
+            f"{' ' * 5}└[{R}•{RS}] {C}DNS LookUp{Y}:{RS} {R}Oops! The {G}Dns Lookup{R} Failed And The Requested Domain Could Not Be Found.{RS}")
 
     input(f"\n[{G} NOTE {RS}]{RS} USER {C}VPN{RS} TO SEARCH {R}USERNAME{RS} PORN SITE {B} PRESS ENTER {RS}")
 
